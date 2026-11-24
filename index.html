@@ -1,746 +1,217 @@
-:root {
-  --bg-deep: #0B132B;
-  --bg-surface: #151E38;
-  --bg-card: #1C2541;
-  --bg-card-alt: #243052;
-  --emerald: #2EC4B6;
-  --emerald-glow: rgba(46, 196, 182, 0.25);
-  --gold: #F4D35E;
-  --gold-glow: rgba(244, 211, 94, 0.2);
-  --danger: #EF476F;
-  --text-main: #F8FAFC;
-  --text-muted: #94A3B8;
-  --border: rgba(255, 255, 255, 0.08);
-  --radius-lg: 20px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background-color: var(--bg-deep);
-  color: var(--text-main);
-  line-height: 1.5;
-  overflow-x: hidden;
-  min-height: 100vh;
-}
-
-.app-shell {
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100vh;
-  position: relative;
-  padding-bottom: calc(88px + var(--safe-bottom));
-  background: radial-gradient(circle at top right, rgba(46, 196, 182, 0.08), transparent 45%),
-              var(--bg-deep);
-}
-
-/* Header */
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px 12px;
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background: rgba(11, 19, 43, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-
-.brand-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-logo {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-}
-
-.brand-name {
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.streak-badge {
-  background: rgba(244, 211, 94, 0.12);
-  color: var(--gold);
-  border: 1px solid rgba(244, 211, 94, 0.25);
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.lang-toggle {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 1px solid var(--border);
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.lang-toggle:active {
-  transform: scale(0.95);
-}
-
-/* Main Content & Tabs */
-.main-content {
-  padding: 18px 20px;
-}
-
-.tab-section {
-  display: none;
-  animation: fadeIn 0.28s ease;
-}
-
-.tab-section.active {
-  display: block;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.greeting-title {
-  font-size: 1.45rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.greeting-sub {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 20px;
-}
-
-.section-heading {
-  font-size: 1rem;
-  font-weight: 700;
-  margin: 22px 0 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* Cards & Buttons */
-.card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px;
-  margin-bottom: 14px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 13px 18px;
-  border-radius: var(--radius-md);
-  border: none;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
-
-.btn:active {
-  transform: scale(0.97);
-}
-
-.btn-primary {
-  background: var(--emerald);
-  color: #06211E;
-}
-
-.btn-gold {
-  background: linear-gradient(135deg, #F4D35E, #E5B935);
-  color: #1F1600;
-}
-
-.btn-sos {
-  background: linear-gradient(135deg, #EF476F, #D62851);
-  color: #FFFFFF;
-  box-shadow: 0 8px 24px rgba(239, 71, 111, 0.3);
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--text-main);
-  border: 1px solid var(--border);
-}
-
-.btn-sm {
-  padding: 8px 12px;
-  font-size: 0.82rem;
-  width: auto;
-}
-
-/* Tab 1: Home & SOS */
-.sos-hero {
-  background: linear-gradient(145deg, rgba(239, 71, 111, 0.16), rgba(28, 37, 65, 0.95));
-  border: 1px solid rgba(239, 71, 111, 0.35);
-}
-
-.sos-hero h3 {
-  font-size: 1.15rem;
-  margin-bottom: 6px;
-}
-
-.sos-hero p {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-}
-
-.quick-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.quick-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  text-align: left;
-  cursor: pointer;
-  color: var(--text-main);
-}
-
-.quick-card:active {
-  background: var(--bg-card-alt);
-}
-
-.quick-icon {
-  font-size: 1.5rem;
-  margin-bottom: 8px;
-  display: block;
-}
-
-.quick-card h4 {
-  font-size: 0.92rem;
-  margin-bottom: 2px;
-}
-
-.quick-card span {
-  font-size: 0.76rem;
-  color: var(--text-muted);
-}
-
-/* Tab 2: Sessions & 7-Day Program */
-.session-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.session-item:active {
-  background: var(--bg-card-alt);
-}
-
-.session-meta h4 {
-  font-size: 0.96rem;
-  margin-bottom: 3px;
-}
-
-.session-meta p {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.pill {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.pill-free {
-  background: rgba(46, 196, 182, 0.15);
-  color: var(--emerald);
-}
-
-.pill-pro {
-  background: rgba(244, 211, 94, 0.16);
-  color: var(--gold);
-  border: 1px solid rgba(244, 211, 94, 0.3);
-}
-
-.locked {
-  opacity: 0.75;
-}
-
-/* Tab 3: Sound Mixer */
-.timer-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.timer-pills {
-  display: flex;
-  gap: 6px;
-}
-
-.timer-btn {
-  background: var(--bg-surface);
-  color: var(--text-muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.timer-btn.active {
-  background: var(--emerald);
-  color: #06211E;
-  border-color: var(--emerald);
-}
-
-.timer-countdown {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--gold);
-}
-
-.sound-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 14px 16px;
-  margin-bottom: 10px;
-  transition: border-color 0.2s ease;
-}
-
-.sound-card.playing {
-  border-color: var(--emerald);
-  box-shadow: 0 0 18px var(--emerald-glow);
-}
-
-.sound-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.sound-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.toggle-btn {
-  background: var(--bg-surface);
-  color: var(--text-main);
-  border: 1px solid var(--border);
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.sound-card.playing .toggle-btn {
-  background: var(--emerald);
-  color: #06211E;
-  border-color: var(--emerald);
-}
-
-.volume-slider {
-  width: 100%;
-  accent-color: var(--emerald);
-  height: 5px;
-  cursor: pointer;
-}
-
-/* Tab 4: Journal & Thought Release */
-.mood-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-
-.mood-btn {
-  flex: 1;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 4px;
-  font-size: 1.4rem;
-  cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.15s ease;
-}
-
-.mood-btn.selected {
-  border-color: var(--emerald);
-  background: rgba(46, 196, 182, 0.15);
-  transform: translateY(-2px);
-}
-
-.input-field,
-.textarea-field {
-  width: 100%;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text-main);
-  padding: 12px 14px;
-  font-size: 0.92rem;
-  font-family: inherit;
-  margin-bottom: 12px;
-  outline: none;
-}
-
-.input-field:focus,
-.textarea-field:focus {
-  border-color: var(--emerald);
-}
-
-.textarea-field {
-  min-height: 90px;
-  resize: vertical;
-  transition: opacity 0.9s ease, transform 0.9s ease, filter 0.9s ease;
-}
-
-.textarea-field.releasing {
-  opacity: 0;
-  transform: translateY(-24px) scale(0.94);
-  filter: blur(8px);
-}
-
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.history-item {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.history-emoji {
-  font-size: 1.3rem;
-}
-
-.history-body p {
-  font-size: 0.86rem;
-}
-
-.history-date {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-
-/* Tab 5: Pro Subscription */
-.pro-card {
-  background: linear-gradient(155deg, #1C2541 0%, #142B3A 100%);
-  border: 1px solid rgba(244, 211, 94, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.pro-badge {
-  display: inline-block;
-  background: var(--gold);
-  color: #1F1600;
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 4px 10px;
-  border-radius: 999px;
-  margin-bottom: 10px;
-  letter-spacing: 0.5px;
-}
-
-.price-row {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin: 10px 0 16px;
-}
-
-.price-amount {
-  font-size: 1.9rem;
-  font-weight: 800;
-  color: var(--gold);
-}
-
-.price-period {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
-
-.benefit-list {
-  list-style: none;
-  margin-bottom: 18px;
-}
-
-.benefit-list li {
-  font-size: 0.88rem;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.benefit-list li:last-child {
-  border-bottom: none;
-}
-
-.pro-status-box {
-  background: rgba(46, 196, 182, 0.12);
-  border: 1px solid var(--emerald);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  margin-bottom: 14px;
-  text-align: center;
-}
-
-.pro-status-box h4 {
-  color: var(--emerald);
-  margin-bottom: 4px;
-}
-
-.code-row {
-  display: flex;
-  gap: 8px;
-}
-
-.code-row .input-field {
-  margin-bottom: 0;
-  text-transform: uppercase;
-}
-
-/* Modal Overlay (SOS Breathing & Guided Player) */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(7, 12, 28, 0.94);
-  backdrop-filter: blur(10px);
-  z-index: 100;
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 24px 20px calc(28px + var(--safe-bottom));
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.modal-overlay.open {
-  display: flex;
-  animation: fadeIn 0.25s ease;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.close-btn {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 1px solid var(--border);
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-.modal-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  flex: 1;
-  padding: 20px 0;
-}
-
-/* Breathing Circle */
-.breath-stage {
-  width: 220px;
-  height: 220px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 24px 0;
-  position: relative;
-}
-
-.breath-circle {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--emerald), #187770);
-  box-shadow: 0 0 35px var(--emerald-glow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #06211E;
-  transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
-}
-
-.breath-circle.expand {
-  transform: scale(1.85);
-  box-shadow: 0 0 60px rgba(46, 196, 182, 0.55);
-}
-
-.breath-circle.hold {
-  transform: scale(1.85);
-  box-shadow: 0 0 45px rgba(244, 211, 94, 0.45);
-}
-
-.breath-circle.shrink {
-  transform: scale(1);
-  box-shadow: 0 0 25px var(--emerald-glow);
-}
-
-.breath-instruction {
-  font-size: 1.35rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.mode-switch {
-  display: flex;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-/* Guided Script Display */
-.guided-timer {
-  font-size: 2.6rem;
-  font-weight: 800;
-  color: var(--emerald);
-  margin-bottom: 20px;
-  font-variant-numeric: tabular-nums;
-}
-
-.guided-script {
-  font-size: 1.15rem;
-  line-height: 1.7;
-  max-width: 340px;
-  min-height: 100px;
-  color: var(--text-main);
-  transition: opacity 0.5s ease;
-}
-
-/* Bottom Navigation */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
-  background: rgba(16, 24, 48, 0.94);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 6px calc(10px + var(--safe-bottom));
-  z-index: 50;
-}
-
-.nav-item {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  cursor: pointer;
-  flex: 1;
-}
-
-.nav-icon {
-  font-size: 1.25rem;
-}
-
-.nav-item.active {
-  color: var(--emerald);
-}
-
-/* Toast Notification */
-.toast {
-  position: fixed;
-  bottom: 92px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: #1E293B;
-  color: var(--text-main);
-  border: 1px solid var(--emerald);
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-size: 0.84rem;
-  font-weight: 600;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  z-index: 120;
-  white-space: nowrap;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B132B" />
+  <meta name="description" content="Tenang — Aplikasi mindfulness dwibahasa untuk kawalan stres, fokus, dan tidur lena." />
+  <title>Tenang — Mindfulness &amp; Tidur</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon.svg" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Header -->
+    <header class="top-bar">
+      <div class="brand-wrap">
+        <img src="./icon.svg" alt="Tenang" class="brand-logo" />
+        <span class="brand-name">Tenang</span>
+      </div>
+      <div class="header-actions">
+        <span class="streak-badge" id="streakBadge">🔥 1</span>
+        <button type="button" class="lang-toggle" id="langToggle" aria-label="Tukar Bahasa">BM | EN</button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- TAB 1: UTAMA (HOME & SOS) -->
+      <section id="tab-home" class="tab-section active">
+        <h1 class="greeting-title" id="greetingTitle">Selamat Malam</h1>
+        <p class="greeting-sub" id="greetingSub">Ambil nafas perlahan. Anda berada di ruang yang selamat.</p>
+
+        <div class="card sos-hero">
+          <h3 data-i18n="sos_title">Mod SOS Panik &amp; Stres</h3>
+          <p data-i18n="sos_desc">Rasa sesak dada, cemas, atau terlalu penat? Tekan butang di bawah untuk tenangkan sistem saraf dalam 60 saat.</p>
+          <button type="button" class="btn btn-sos" id="btnOpenSos" data-i18n="sos_btn">🫀 Mula Pernafasan SOS (1-Tap)</button>
+        </div>
+
+        <h2 class="section-heading" data-i18n="quick_access">Akses Pantas</h2>
+        <div class="quick-grid">
+          <button type="button" class="quick-card" id="quickBoxBreath">
+            <span class="quick-icon">🌬️</span>
+            <h4 data-i18n="q_box_title">Box Breathing</h4>
+            <span data-i18n="q_box_sub">Fokus &amp; stabilkan minda</span>
+          </button>
+          <button type="button" class="quick-card" id="quickRainSound">
+            <span class="quick-icon">🌧️</span>
+            <h4 data-i18n="q_rain_title">Bunyi Hujan</h4>
+            <span data-i18n="q_rain_sub">Mainkan suasana tenang</span>
+          </button>
+          <button type="button" class="quick-card" id="quickRelease">
+            <span class="quick-icon">🔥</span>
+            <h4 data-i18n="q_release_title">Lepas Fikiran</h4>
+            <span data-i18n="q_release_sub">Buang beban kerisauan</span>
+          </button>
+          <button type="button" class="quick-card" id="quickSleepReset">
+            <span class="quick-icon">🌙</span>
+            <h4 data-i18n="q_sleep_title">Sleep Reset</h4>
+            <span data-i18n="q_sleep_sub">Program tidur 7 hari</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- TAB 2: SESI & PROGRAM -->
+      <section id="tab-sessions" class="tab-section">
+        <h2 class="section-heading" style="margin-top:0;" data-i18n="guided_heading">Sesi Berpandu Pantas</h2>
+        <div id="quickSessionsList"></div>
+
+        <h2 class="section-heading" data-i18n="program_heading">Program 7-Hari Sleep Reset</h2>
+        <div id="sleepProgramList"></div>
+      </section>
+
+      <!-- TAB 3: BUNYI & FOKUS -->
+      <section id="tab-sounds" class="tab-section">
+        <div class="card">
+          <div class="timer-bar">
+            <span style="font-size:0.86rem;font-weight:700;" data-i18n="sleep_timer">⏱️ Sleep Timer</span>
+            <span class="timer-countdown" id="timerCountdown"></span>
+          </div>
+          <div class="timer-pills" style="margin-top:10px;">
+            <button type="button" class="timer-btn active" data-minutes="0" data-i18n="timer_off">Tutup</button>
+            <button type="button" class="timer-btn" data-minutes="15">15m</button>
+            <button type="button" class="timer-btn" data-minutes="30">30m</button>
+            <button type="button" class="timer-btn" data-minutes="60">60m</button>
+          </div>
+        </div>
+
+        <div id="soundMixerList"></div>
+
+        <button type="button" class="btn btn-outline" id="btnStopAllSounds" data-i18n="stop_all_sounds">⏹️ Hentikan Semua Bunyi</button>
+      </section>
+
+      <!-- TAB 4: JURNAL & EMOSI -->
+      <section id="tab-journal" class="tab-section">
+        <div class="card">
+          <h3 style="margin-bottom:10px;font-size:1rem;" data-i18n="mood_title">Daftar Masuk Mood Hari Ini</h3>
+          <div class="mood-row" id="moodRow">
+            <button type="button" class="mood-btn" data-mood="😌" aria-label="Tenang">😌</button>
+            <button type="button" class="mood-btn" data-mood="🙂" aria-label="Baik">🙂</button>
+            <button type="button" class="mood-btn" data-mood="😐" aria-label="Biasa">😐</button>
+            <button type="button" class="mood-btn" data-mood="😔" aria-label="Penat">😔</button>
+            <button type="button" class="mood-btn" data-mood="😰" aria-label="Cemas">😰</button>
+          </div>
+          <input type="text" id="moodNote" class="input-field" data-i18n-placeholder="mood_placeholder" placeholder="Nota ringkas perasaan anda..." />
+          <button type="button" class="btn btn-primary" id="btnSaveMood" data-i18n="mood_save">Simpan Rekod Mood</button>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom:6px;font-size:1rem;" data-i18n="release_title">🔥 Lepaskan Fikiran</h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:10px;" data-i18n="release_desc">Taip apa yang mengganggu fikiran anda sekarang. Ia tidak akan disimpan — tekan lepaskan untuk lenyapkannya.</p>
+          <textarea id="thoughtInput" class="textarea-field" data-i18n-placeholder="release_placeholder" placeholder="Tulis kerisauan anda di sini..."></textarea>
+          <button type="button" class="btn btn-outline" id="btnReleaseThought" data-i18n="release_btn">✨ Lepaskan &amp; Lenyapkan</button>
+        </div>
+
+        <h2 class="section-heading" data-i18n="history_heading">Sejarah Mood Terkini</h2>
+        <div class="history-list" id="moodHistoryList"></div>
+      </section>
+
+      <!-- TAB 5: AKAUN & PRO -->
+      <section id="tab-pro" class="tab-section">
+        <div class="pro-status-box" id="proStatusBox" style="display:none;">
+          <h4 data-i18n="pro_active_title">✨ Tenang Pro Aktif</h4>
+          <p id="proDaysLeft" style="font-size:0.85rem;color:var(--text-main);"></p>
+        </div>
+
+        <div class="card pro-card">
+          <span class="pro-badge">TENANG PRO</span>
+          <h2 style="font-size:1.3rem;" data-i18n="pro_heading">Buka Ketenangan Tanpa Had</h2>
+          <div class="price-row">
+            <span class="price-amount">RM9.90</span>
+            <span class="price-period" data-i18n="pro_period">/ bulan</span>
+          </div>
+          <ul class="benefit-list">
+            <li data-i18n="pro_b1">✅ Program penuh 7-Hari Sleep Reset (Hari 1–7)</li>
+            <li data-i18n="pro_b2">✅ Semua bunyi premium &amp; frekuensi 432Hz</li>
+            <li data-i18n="pro_b3">✅ Akses penuh semua sesi berpandu &amp; fokus</li>
+            <li data-i18n="pro_b4">✅ Kemas kini ciri baharu setiap bulan</li>
+          </ul>
+          <button type="button" class="btn btn-gold" id="btnSubscribe" data-i18n="pro_subscribe_btn">👑 Langgan Tenang Pro Sekarang</button>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size:0.98rem;margin-bottom:6px;" data-i18n="code_title">Sudah Ada Kod Akses Bulanan?</h3>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;" data-i18n="code_desc">Masukkan kod yang diterima selepas pembayaran untuk aktifkan akses Pro selama 30 hari.</p>
+          <div class="code-row">
+            <input type="text" id="proCodeInput" class="input-field" placeholder="TENANGPRO" />
+            <button type="button" class="btn btn-primary btn-sm" id="btnRedeemCode" data-i18n="code_btn">Aktifkan</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" aria-label="Navigasi Utama">
+      <button type="button" class="nav-item active" data-tab="home">
+        <span class="nav-icon">🏠</span>
+        <span data-i18n="nav_home">Utama</span>
+      </button>
+      <button type="button" class="nav-item" data-tab="sessions">
+        <span class="nav-icon">🧘</span>
+        <span data-i18n="nav_sessions">Sesi</span>
+      </button>
+      <button type="button" class="nav-item" data-tab="sounds">
+        <span class="nav-icon">🎧</span>
+        <span data-i18n="nav_sounds">Bunyi</span>
+      </button>
+      <button type="button" class="nav-item" data-tab="journal">
+        <span class="nav-icon">📓</span>
+        <span data-i18n="nav_journal">Jurnal</span>
+      </button>
+      <button type="button" class="nav-item" data-tab="pro">
+        <span class="nav-icon">👑</span>
+        <span data-i18n="nav_pro">Pro</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- MODAL 1: SOS BREATHING -->
+  <div class="modal-overlay" id="sosModal">
+    <div class="modal-header">
+      <h3 data-i18n="sos_modal_title">Pernafasan Tenang</h3>
+      <button type="button" class="close-btn" id="btnCloseSos" aria-label="Tutup">✕</button>
+    </div>
+    <div class="modal-center">
+      <div class="breath-instruction" id="breathInstruction">Bersedia...</div>
+      <div class="breath-stage">
+        <div class="breath-circle" id="breathCircle">●</div>
+      </div>
+      <div class="mode-switch">
+        <button type="button" class="timer-btn active" id="mode478">4-7-8 Relax</button>
+        <button type="button" class="timer-btn" id="modeBox">Box 4-4-4-4</button>
+      </div>
+    </div>
+    <button type="button" class="btn btn-primary" id="btnToggleBreath" data-i18n="breath_start">Mula Sesi</button>
+  </div>
+
+  <!-- MODAL 2: GUIDED SESSION PLAYER -->
+  <div class="modal-overlay" id="guidedModal">
+    <div class="modal-header">
+      <h3 id="guidedTitle">Sesi Berpandu</h3>
+      <button type="button" class="close-btn" id="btnCloseGuided" aria-label="Tutup">✕</button>
+    </div>
+    <div class="modal-center">
+      <div class="guided-timer" id="guidedTimer">03:00</div>
+      <p class="guided-script" id="guidedScript">Tekan mula apabila anda sudah selesa.</p>
+    </div>
+    <button type="button" class="btn btn-primary" id="btnToggleGuided" data-i18n="session_start">Mula Sesi</button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
