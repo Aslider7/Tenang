@@ -777,4 +777,458 @@
             <div class="sound-name">🌧️ Hujan Lembut</div>
             <button id="toggle-rain" class="sound-toggle" onclick="toggleSound('rain')">Mati</button>
           </div>
-          <input type="range" id="vol-rai
+                    <input type="range" id="vol-rain" min="0" max="1" step="0.05" value="0.4" oninput="setVolume('rain', this.value)" />
+        </div>
+
+        <div class="sound-item">
+          <div class="sound-head">
+            <div class="sound-name">🌊 Ombak / Angin Malam</div>
+            <button id="toggle-wind" class="sound-toggle" onclick="toggleSound('wind')">Mati</button>
+          </div>
+          <input type="range" id="vol-wind" min="0" max="1" step="0.05" value="0.35" oninput="setVolume('wind', this.value)" />
+        </div>
+
+        <div class="sound-item">
+          <div class="sound-head">
+            <div class="sound-name">✨ Fokus Drone (Pro 🔒)</div>
+            <button id="toggle-drone" class="sound-toggle" onclick="toggleSound('drone')">Mati</button>
+          </div>
+          <input type="range" id="vol-drone" min="0" max="1" step="0.05" value="0.25" oninput="setVolume('drone', this.value)" />
+        </div>
+      </div>
+
+      <button class="btn btn-secondary btn-full" onclick="stopAllSounds()">Hentikan Semua Bunyi</button>
+    </section>
+
+    <!-- SKRIN 4: CHECK-IN MOOD -->
+    <section id="screen-checkin" class="screen">
+      <h2 class="section-title">Rekod Mood Harian</h2>
+      <p class="section-sub">Catat perasaan anda untuk pantau perubahan emosi dari masa ke masa.</p>
+
+      <div class="card">
+        <div class="mood-grid" id="mood-grid">
+          <button class="mood-btn" onclick="selectMood('Tenang', '😌', this)"><span>😌</span><small>Tenang</small></button>
+          <button class="mood-btn" onclick="selectMood('Gembira', '😊', this)"><span>😊</span><small>Gembira</small></button>
+          <button class="mood-btn" onclick="selectMood('Biasa', '😐', this)"><span>😐</span><small>Biasa</small></button>
+          <button class="mood-btn" onclick="selectMood('Stres', '😣', this)"><span>😣</span><small>Stres</small></button>
+          <button class="mood-btn" onclick="selectMood('Penat', '😴', this)"><span>😴</span><small>Penat</small></button>
+        </div>
+        <textarea id="mood-note" rows="3" placeholder="Apa yang bermain di fikiran anda sekarang? (Pilihan)"></textarea>
+        <button class="btn btn-primary btn-full" onclick="saveCheckin()">Simpan Rekod Mood</button>
+      </div>
+
+      <h3 style="font-size:0.95rem; margin: 14px 0 8px;">Sejarah Rekod</h3>
+      <div id="checkin-list"></div>
+    </section>
+
+    <!-- SKRIN 5: PRO UNLOCK -->
+    <section id="screen-pro" class="screen">
+      <h2 class="section-title">TenangJiwa Pro</h2>
+      <p class="section-sub">Buka semua ciri premium untuk pengalaman ketenangan penuh.</p>
+
+      <div class="pro-banner">
+        <h3 style="font-size:1.05rem; margin-bottom:4px;">🌿 Naik Taraf ke Pro</h3>
+        <ul class="pro-list">
+          <li>✅ Sesi pernafasan panjang (10 minit)</li>
+          <li>✅ Audio Fokus Drone eksklusif</li>
+          <li>✅ Sokong pembangunan app tempatan</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:0.95rem; margin-bottom:8px;">Ada Kod Promo?</h3>
+        <input type="text" id="promo-input" class="input-field" placeholder="Masukkan kod (cth: TENANGPRO)" />
+        <button class="btn btn-primary btn-full" onclick="redeemPromo()">Aktifkan Pro</button>
+        <div id="promo-status" class="status-msg"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span>🏠</span>Utama</button>
+      <button class="nav-btn" data-tab="player" onclick="switchTab('player')"><span>🫁</span>Sesi</button>
+      <button class="nav-btn" data-tab="sound" onclick="switchTab('sound')"><span>🎧</span>Bunyi</button>
+      <button class="nav-btn" data-tab="checkin" onclick="switchTab('checkin')"><span>📝</span>Mood</button>
+      <button class="nav-btn" data-tab="pro" onclick="switchTab('pro')"><span>⭐</span>Pro</button>
+    </div>
+  </nav>
+
+  <script>
+    // === STATE & STORAGE ===
+    const state = {
+      isPro: localStorage.getItem('tj_pro') === 'true',
+      sessions: parseInt(localStorage.getItem('tj_sessions') || '0', 10),
+      checkins: JSON.parse(localStorage.getItem('tj_checkins') || '[]'),
+      mode: 'calm',
+      durationMin: 1,
+      running: false,
+      remainingSec: 60,
+      phaseIdx: 0,
+      phaseSecLeft: 0,
+      timerId: null,
+      scriptIdx: 0,
+      selectedMood: null
+    };
+
+    const MODES = {
+      calm: {
+        desc: 'Nafas 4-4-6 untuk meredakan stres & degupan jantung.',
+        phases: [
+          { label: 'Tarik', sec: 4, scale: 1.25 },
+          { label: 'Tahan', sec: 4, scale: 1.25 },
+          { label: 'Hembus', sec: 6, scale: 0.8 }
+        ],
+        scripts: [
+          'Tarik nafas perlahan melalui hidung, rasakan udara memenuhi dada.',
+          'Lepaskan ketegangan di bahu dan rahang anda setiap kali menghembus.',
+          'Anda selamat di saat ini. Biarkan fikiran yang bising berlalu pergi.'
+        ]
+      },
+      sleep: {
+        desc: 'Teknik 4-7-8 membantu badan bersedia untuk tidur lena.',
+        phases: [
+          { label: 'Tarik', sec: 4, scale: 1.25 },
+          { label: 'Tahan', sec: 7, scale: 1.25 },
+          { label: 'Hembus', sec: 8, scale: 0.78 }
+        ],
+        scripts: [
+          'Pejamkan mata perlahan. Biarkan badan anda terasa berat di atas tilam.',
+          'Hembus nafas panjang dan lepaskan segala urusan hari ini.',
+          'Setiap hembusan membawa anda lebih dekat ke rehat yang mendalam.'
+        ]
+      },
+      focus: {
+        desc: 'Nafas kotak 4-4-4-4 untuk menajamkan tumpuan minda.',
+        phases: [
+          { label: 'Tarik', sec: 4, scale: 1.22 },
+          { label: 'Tahan', sec: 4, scale: 1.22 },
+          { label: 'Hembus', sec: 4, scale: 0.82 },
+          { label: 'Tahan', sec: 4, scale: 0.82 }
+        ],
+        scripts: [
+          'Tegakkan duduk anda. Fokuskan perhatian hanya pada rentak nafas.',
+          'Kosongkan gangguan. Satu tugas pada satu masa dengan minda yang jelas.',
+          'Anda tenang, terkawal, dan bersedia untuk fokus.'
+        ]
+      }
+    };
+
+    // === INIT ===
+    function init() {
+      const hour = new Date().getHours();
+      const greet = hour < 12 ? 'Selamat pagi' : hour < 18 ? 'Selamat petang' : 'Selamat malam';
+      document.getElementById('greeting-text').textContent = greet;
+      updateProUI();
+      updateStats();
+      renderCheckins();
+      resetSession();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // === NAVIGATION ===
+    function switchTab(tab) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + tab).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === tab);
+      });
+      window.scrollTo(0, 0);
+    }
+
+    function quickStartMode(mode) {
+      selectMode(mode);
+      switchTab('player');
+    }
+
+    // === SESSION PLAYER ===
+    function selectMode(mode) {
+      state.mode = mode;
+      state.scriptIdx = 0;
+      document.querySelectorAll('#mode-pills .pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.mode === mode);
+      });
+      document.getElementById('player-mode-desc').textContent = MODES[mode].desc;
+      resetSession();
+    }
+
+    function selectDuration(min) {
+      if (min === 10 && !state.isPro) {
+        showToast('Sesi 10 minit khas untuk Pro 🔒');
+        switchTab('pro');
+        return;
+      }
+      state.durationMin = min;
+      document.querySelectorAll('#duration-pills .pill').forEach(p => {
+        p.classList.toggle('active', parseInt(p.dataset.min, 10) === min);
+      });
+      resetSession();
+    }
+
+    function formatTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function resetSession() {
+      clearInterval(state.timerId);
+      state.running = false;
+      state.remainingSec = state.durationMin * 60;
+      state.phaseIdx = 0;
+      state.phaseSecLeft = MODES[state.mode].phases[0].sec;
+      document.getElementById('session-clock').textContent = formatTime(state.remainingSec);
+      document.getElementById('breath-phase').textContent = 'Sedia';
+      document.getElementById('breath-sec').textContent = '—';
+      document.getElementById('breath-orb').style.transform = 'scale(0.85)';
+      document.getElementById('btn-play-session').textContent = 'Mula Sesi';
+      document.getElementById('script-text').textContent = MODES[state.mode].scripts[state.scriptIdx];
+    }
+
+    function toggleSession() {
+      if (state.running) {
+        clearInterval(state.timerId);
+        state.running = false;
+        document.getElementById('btn-play-session').textContent = 'Sambung';
+        return;
+      }
+      state.running = true;
+      document.getElementById('btn-play-session').textContent = 'Jeda';
+      applyPhaseUI();
+      state.timerId = setInterval(tickSession, 1000);
+    }
+
+    function applyPhaseUI() {
+      const phase = MODES[state.mode].phases[state.phaseIdx];
+      document.getElementById('breath-phase').textContent = phase.label;
+      document.getElementById('breath-sec').textContent = state.phaseSecLeft;
+      const orb = document.getElementById('breath-orb');
+      orb.style.transition = `transform ${phase.sec}s ease-in-out`;
+      orb.style.transform = `scale(${phase.scale})`;
+      if (document.getElementById('chime-toggle').checked) playChime();
+    }
+
+    function tickSession() {
+      state.remainingSec--;
+      state.phaseSecLeft--;
+      document.getElementById('session-clock').textContent = formatTime(Math.max(0, state.remainingSec));
+
+      if (state.remainingSec <= 0) {
+        clearInterval(state.timerId);
+        state.running = false;
+        state.sessions++;
+        localStorage.setItem('tj_sessions', state.sessions);
+        updateStats();
+        showToast('Tahniah! Sesi selesai 🌿');
+        resetSession();
+        return;
+      }
+
+      if (state.phaseSecLeft <= 0) {
+        const phases = MODES[state.mode].phases;
+        state.phaseIdx = (state.phaseIdx + 1) % phases.length;
+        state.phaseSecLeft = phases[state.phaseIdx].sec;
+        applyPhaseUI();
+      } else {
+        document.getElementById('breath-sec').textContent = state.phaseSecLeft;
+      }
+    }
+
+    function nextScriptLine() {
+      const list = MODES[state.mode].scripts;
+      state.scriptIdx = (state.scriptIdx + 1) % list.length;
+      document.getElementById('script-text').textContent = list[state.scriptIdx];
+    }
+
+    // === WEB AUDIO API (OFFLINE SOUNDS) ===
+    let audioCtx = null;
+    const activeSounds = {};
+
+    function getAudioCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    }
+
+    function playChime() {
+      const ctx = getAudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(528, ctx.currentTime);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.8);
+    }
+
+    function toggleSound(type) {
+      if (type === 'drone' && !state.isPro) {
+        showToast('Fokus Drone khas untuk Pro 🔒');
+        switchTab('pro');
+        return;
+      }
+      const btn = document.getElementById('toggle-' + type);
+      if (activeSounds[type]) {
+        activeSounds[type].stop();
+        delete activeSounds[type];
+        btn.textContent = 'Mati';
+        btn.classList.remove('on');
+        return;
+      }
+
+      const ctx = getAudioCtx();
+      const gain = ctx.createGain();
+      const vol = parseFloat(document.getElementById('vol-' + type).value);
+      gain.gain.value = vol * 0.25;
+      gain.connect(ctx.destination);
+
+      let source;
+      if (type === 'drone') {
+        source = ctx.createOscillator();
+        source.type = 'sine';
+        source.frequency.value = 174;
+        source.connect(gain);
+        source.start();
+      } else {
+        const bufferSize = ctx.sampleRate * 2;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let lastOut = 0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          if (type === 'wind') {
+            data[i] = (lastOut + (0.02 * white)) / 1.02;
+            lastOut = data[i];
+            data[i] *= 3.5;
+          } else {
+            data[i] = white * 0.5;
+          }
+        }
+        source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.loop = true;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = type === 'rain' ? 1200 : 450;
+        source.connect(filter);
+        filter.connect(gain);
+        source.start();
+      }
+
+      activeSounds[type] = { source, gain, stop: () => { try { source.stop(); } catch (e) {} } };
+      btn.textContent = 'Aktif';
+      btn.classList.add('on');
+    }
+
+    function setVolume(type, val) {
+      if (activeSounds[type]) activeSounds[type].gain.gain.value = parseFloat(val) * 0.25;
+    }
+
+    function stopAllSounds() {
+      Object.keys(activeSounds).forEach(k => toggleSound(k));
+      showToast('Semua bunyi dihentikan');
+    }
+
+    // === MOOD CHECK-IN ===
+    function selectMood(label, emoji, btn) {
+      state.selectedMood = { label, emoji };
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    function saveCheckin() {
+      if (!state.selectedMood) {
+        showToast('Sila pilih mood dahulu');
+        return;
+      }
+      const note = document.getElementById('mood-note').value.trim();
+      const entry = {
+        id: Date.now(),
+        mood: state.selectedMood.label,
+        emoji: state.selectedMood.emoji,
+        note,
+        date: new Date().toLocaleString('ms-MY', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+      };
+      state.checkins.unshift(entry);
+      localStorage.setItem('tj_checkins', JSON.stringify(state.checkins));
+      document.getElementById('mood-note').value = '';
+      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+      state.selectedMood = null;
+      updateStats();
+      renderCheckins();
+      showToast('Rekod mood disimpan');
+    }
+
+    function deleteCheckin(id) {
+      state.checkins = state.checkins.filter(c => c.id !== id);
+      localStorage.setItem('tj_checkins', JSON.stringify(state.checkins));
+      updateStats();
+      renderCheckins();
+    }
+
+    function renderCheckins() {
+      const box = document.getElementById('checkin-list');
+      if (!state.checkins.length) {
+        box.innerHTML = '<p style="font-size:0.85rem; color:var(--text-muted);">Belum ada rekod mood lagi.</p>';
+        return;
+      }
+      box.innerHTML = state.checkins.map(c => `
+        <div class="log-item">
+          <div class="log-top">
+            <span class="log-mood">${c.emoji} ${c.mood}</span>
+            <span class="log-date">${c.date} <button class="del-btn" onclick="deleteCheckin(${c.id})">Padam</button></span>
+          </div>
+          ${c.note ? `<div class="log-note">${c.note}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function updateStats() {
+      document.getElementById('stat-sessions').textContent = state.sessions;
+      document.getElementById('stat-checkins').textContent = state.checkins.length;
+      document.getElementById('stat-last-mood').textContent = state.checkins.length ? state.checkins[0].emoji : '—';
+    }
+
+    // === PRO UNLOCK ===
+    function redeemPromo() {
+      const code = document.getElementById('promo-input').value.trim().toUpperCase();
+      const status = document.getElementById('promo-status');
+      if (code === 'TENANGPRO') {
+        state.isPro = true;
+        localStorage.setItem('tj_pro', 'true');
+        updateProUI();
+        status.style.color = 'var(--success)';
+        status.textContent = 'Berjaya! Semua ciri Pro telah dibuka.';
+        showToast('TenangJiwa Pro Aktif ⭐');
+      } else {
+        status.style.color = 'var(--danger)';
+        status.textContent = 'Kod tidak sah. Cuba lagi.';
+      }
+    }
+
+    function updateProUI() {
+      const badge = document.getElementById('header-pro-badge');
+      if (state.isPro) {
+        badge.textContent = 'PRO ⭐';
+        badge.classList.add('active');
+      } else {
+        badge.textContent = 'PERCUMA';
+        badge.classList.remove('active');
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
