@@ -448,457 +448,230 @@
     .toast.show { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#070B14" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>TenangJiwa — Self-Hypnosis, Tidur & Fokus</title>
-  <style>
-    :root {
-      --bg: #070B14;
-      --surface: rgba(20, 29, 48, 0.72);
-      --surface-solid: #141D30;
-      --surface-light: rgba(36, 49, 77, 0.65);
-      --border: rgba(255, 255, 255, 0.08);
-      --text: #F8FAFC;
-      --muted: #94A3B8;
-      --accent: #818CF8;
-      --accent-2: #38BDF8;
-      --gold: #FBBF24;
-      --green: #34D399;
-      --danger: #FB7185;
-    }
+<body>
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+  <div class="aurora"></div>
+  <div id="toast" class="toast">Mesej</div>
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding-bottom: 95px;
-      overflow-x: hidden;
-      position: relative;
-    }
+  <header>
+    <div class="brand-wrap">
+      <h1>Tenang<span>Jiwa</span></h1>
+      <p id="greetingText">Selamat berehat malam ini</p>
+    </div>
+    <div id="statusBadge" class="badge badge-free">PERCUMA</div>
+  </header>
 
-    .aurora {
-      position: fixed;
-      top: -20%;
-      left: -20%;
-      width: 140%;
-      height: 75%;
-      background:
-        radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.18), transparent 55%),
-        radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.14), transparent 50%),
-        radial-gradient(circle at 50% 60%, rgba(168, 85, 247, 0.10), transparent 60%);
-      filter: blur(45px);
-      z-index: -1;
-      animation: drift 16s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-    @keyframes drift {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(-3%, 4%) scale(1.06); }
-    }
+  <div class="container">
 
-    header {
-      padding: 20px 20px 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 520px;
-      margin: 0 auto;
-    }
-    .brand-wrap h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.3px; }
-    .brand-wrap h1 span { color: var(--accent); }
-    .brand-wrap p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    <div id="tab-home" class="tab-content active">
+      <div class="card">
+        <div class="card-title">Apa rasa minda anda sekarang?</div>
+        <p class="card-sub">Pilih satu — kami cadangkan terapi paling tepat untuk saat ini.</p>
+        <div class="mood-grid">
+          <button class="mood-btn" onclick="selectMood('overthink', this)">
+            <span class="mood-emoji">🌀</span>
+            <div><span class="mood-label">Overthinking</span><span class="mood-hint">Fikiran tak berhenti</span></div>
+          </button>
+          <button class="mood-btn" onclick="selectMood('sleep', this)">
+            <span class="mood-emoji">🌙</span>
+            <div><span class="mood-label">Susah Tidur</span><span class="mood-hint">Mata masih segar</span></div>
+          </button>
+          <button class="mood-btn" onclick="selectMood('stress', this)">
+            <span class="mood-emoji">😮‍💨</span>
+            <div><span class="mood-label">Stres / Penat</span><span class="mood-hint">Dada rasa sesak</span></div>
+          </button>
+          <button class="mood-btn" onclick="selectMood('focus', this)">
+            <span class="mood-emoji">⚡</span>
+            <div><span class="mood-label">Hilang Fokus</span><span class="mood-hint">Otak rasa tepu</span></div>
+          </button>
+        </div>
 
-    .badge {
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 5px 11px;
-      border-radius: 20px;
-      letter-spacing: 0.5px;
-    }
-    .badge-free { background: var(--surface-light); color: var(--muted); border: 1px solid var(--border); }
-    .badge-pro { background: linear-gradient(135deg, #F59E0B, #FDE047); color: #070B14; box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); }
+        <div id="recommendBox" class="recommend-box">
+          <div>
+            <div style="font-size:0.72rem; color:var(--accent-2); font-weight:700;">CADANGAN UNTUK ANDA</div>
+            <div id="recTitle" style="font-size:0.9rem; font-weight:700; margin-top:2px;">-</div>
+          </div>
+          <button id="recAction" class="btn btn-primary btn-sm">Mula</button>
+        </div>
+      </div>
 
-    .container {
-      padding: 12px 18px;
-      max-width: 520px;
-      margin: 0 auto;
-    }
-    .tab-content { display: none; animation: fadeUp 0.3s ease; }
-    .tab-content.active { display: block; }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+      <div class="card sos-hero">
+        <div class="card-title" style="justify-content:center;">SOS Tenangkan Nafas (4-4-6)</div>
+        <p class="card-sub" style="margin-bottom:4px;">Ikut cahaya atau pejam mata & rasa getaran halus telefon.</p>
+        <div class="orb-stage">
+          <div class="orb-ring"></div>
+          <div id="sosOrb" class="orb"></div>
+          <div id="sosText" class="orb-label">SEDIA</div>
+          <div id="sosSub" class="orb-count">Tekan mula</div>
+        </div>
+        <button id="sosBtn" class="btn btn-primary" onclick="toggleSOS()">Mula SOS Pernafasan</button>
+      </div>
 
-    .card {
-      background: var(--surface);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .card-sub {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.45;
-      margin-bottom: 14px;
-    }
+      <div class="card">
+        <div class="card-title">🍃 Lepaskan Fikiran Serabut</div>
+        <p class="card-sub">Taip apa yang mengganggu fikiran anda sekarang (tidak disimpan di mana-mana), kemudian lepaskannya pergi.</p>
+        <textarea id="thoughtInput" class="thought-area" placeholder="Contoh: Aku risau pasal kerja esok..."></textarea>
+        <button class="btn btn-outline" style="margin-top:10px;" onclick="releaseThought()">Lepaskan & Tenangkan Diri</button>
+      </div>
 
-    .mood-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .mood-btn {
-      background: var(--surface-light);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      color: var(--text);
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .mood-btn:active { transform: scale(0.97); }
-    .mood-btn.selected {
-      border-color: var(--accent);
-      background: rgba(129, 140, 248, 0.16);
-    }
-    .mood-emoji { font-size: 1.35rem; }
-    .mood-label { font-size: 0.83rem; font-weight: 600; display: block; }
-    .mood-hint { font-size: 0.68rem; color: var(--muted); }
+      <div class="card">
+        <div class="card-title">
+          <span>📅 Program 7-Hari Reset Tidur</span>
+          <span id="streakCount" style="font-size:0.78rem; color:var(--green);">0/7 Hari</span>
+        </div>
+        <p class="card-sub">Tandakan setiap hari anda berjaya luangkan 5 minit untuk diri sendiri.</p>
+        <div class="days-row" id="daysRow"></div>
+      </div>
+    </div>
 
-    .recommend-box {
-      display: none;
-      margin-top: 12px;
-      padding: 12px 14px;
-      background: linear-gradient(135deg, rgba(129, 140, 248, 0.15), rgba(56, 189, 248, 0.1));
-      border: 1px solid rgba(129, 140, 248, 0.35);
-      border-radius: 14px;
-      animation: fadeUp 0.25s ease;
-    }
-    .recommend-box.show { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    <div id="tab-hypno" class="tab-content">
+      <div class="card">
+        <div class="card-title">🎧 Sesi Self-Hypnosis & NSDR</div>
+        <p class="card-sub">Gaya <i>deep relaxation</i> dengan panduan suara automatik & gelombang otak stereo. Pakai <i>earphone</i> untuk kesan terbaik.</p>
 
-    .sos-hero {
-      text-align: center;
-      background: linear-gradient(160deg, rgba(30, 27, 75, 0.85), rgba(15, 23, 42, 0.9));
-      border: 1px solid rgba(129, 140, 248, 0.28);
-    }
-    .orb-stage {
-      position: relative;
-      width: 170px;
-      height: 170px;
-      margin: 18px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .orb-ring {
-      position: absolute;
-      width: 145px;
-      height: 145px;
-      border-radius: 50%;
-      border: 1px dashed rgba(129, 140, 248, 0.35);
-      animation: spin 25s linear infinite;
-    }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    .orb {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #C7D2FE, #6366F1 60%, #312E81);
-      box-shadow: 0 0 35px rgba(99, 102, 241, 0.45);
-      transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
-    }
-    .orb.inhale { transform: scale(1.52); box-shadow: 0 0 70px rgba(129, 140, 248, 0.85); }
-    .orb.hold { transform: scale(1.52); box-shadow: 0 0 85px rgba(56, 189, 248, 0.9); }
-    .orb.exhale { transform: scale(0.82); box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
-    .orb-label {
-      position: absolute;
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-      pointer-events: none;
-    }
-    .orb-count {
-      position: absolute;
-      bottom: 8px;
-      font-size: 0.72rem;
-      color: var(--accent-2);
-      font-weight: 600;
-    }
+        <div class="session-card" onclick="openSession('sleepBasic', false)">
+          <div class="s-left">
+            <div class="s-icon">🌙</div>
+            <div class="s-meta"><h3>Tidur Lena (Asas)</h3><p>5 Min • Relaksasi Otot + Bunyi Hujan</p></div>
+          </div>
+          <span style="color:var(--accent);">▶</span>
+        </div>
 
-    .btn {
-      width: 100%;
-      padding: 13px 16px;
-      border: none;
-      border-radius: 13px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.15s, opacity 0.2s;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: linear-gradient(135deg, #818CF8, #6366F1); color: #fff; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35); }
-    .btn-outline { background: transparent; border: 1px solid rgba(129, 140, 248, 0.5); color: var(--accent); }
-    .btn-gold { background: linear-gradient(135deg, #F59E0B, #FBBF24); color: #070B14; box-shadow: 0 4px 18px rgba(245, 158, 11, 0.3); }
-    .btn-sm { width: auto; padding: 8px 14px; font-size: 0.78rem; border-radius: 10px; }
+        <div class="session-card" onclick="openSession('sosReset', false)">
+          <div class="s-left">
+            <div class="s-icon">🫧</div>
+            <div class="s-meta"><h3>Reset Stres Pantas</h3><p>3 Min • Grounding 5-4-3-2-1 + Alpha</p></div>
+          </div>
+          <span style="color:var(--accent);">▶</span>
+        </div>
 
-    .thought-area {
-      width: 100%;
-      min-height: 82px;
-      background: rgba(7, 11, 20, 0.65);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      color: var(--text);
-      font-size: 0.88rem;
-      resize: none;
-      outline: none;
-      transition: all 1.4s ease;
-    }
-    .thought-area:focus { border-color: var(--accent); }
-    .thought-area.dissolve {
-      opacity: 0;
-      transform: translateY(-28px) scale(0.92);
-      filter: blur(8px);
-    }
+        <div class="session-card" onclick="openSession('deepHypno', true)">
+          <div class="s-left">
+            <div class="s-icon">🌌</div>
+            <div class="s-meta"><h3>Deep Sleep Hypnosis <span class="pro-tag">PRO</span></h3><p>15 Min • Induksi Tangga + Delta 2Hz</p></div>
+          </div>
+          <span style="color:var(--gold);">▶</span>
+        </div>
 
-    .days-row {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-top: 8px;
-    }
-    .day-pill {
-      background: var(--surface-light);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 2px;
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--muted);
-      cursor: pointer;
-    }
-    .day-pill.done {
-      background: rgba(52, 211, 153, 0.16);
-      border-color: var(--green);
-      color: var(--green);
-      font-weight: 700;
-    }
-    .day-pill span { display: block; font-size: 0.9rem; margin-top: 2px; }
+        <div class="session-card" onclick="openSession('overthinkHypno', true)">
+          <div class="s-left">
+            <div class="s-icon">🧠</div>
+            <div class="s-meta"><h3>Hentikan Overthinking <span class="pro-tag">PRO</span></h3><p>10 Min • Visualisasi Sungai + Theta 4.5Hz</p></div>
+          </div>
+          <span style="color:var(--gold);">▶</span>
+        </div>
 
-    .session-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px;
-      background: var(--surface-light);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: border-color 0.2s, transform 0.15s;
-    }
-    .session-card:active { transform: scale(0.98); }
-    .session-card:hover { border-color: rgba(129, 140, 248, 0.45); }
-    .s-left { display: flex; align-items: center; gap: 12px; }
-    .s-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: rgba(129, 140, 248, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      flex-shrink: 0;
-    }
-    .s-meta h3 { font-size: 0.92rem; font-weight: 700; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .s-meta p { font-size: 0.74rem; color: var(--muted); margin-top: 2px; }
-    .pro-tag {
-      font-size: 0.62rem;
-      background: rgba(251, 191, 36, 0.18);
-      color: var(--gold);
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-weight: 800;
-    }
+        <div class="session-card" onclick="openSession('nsdrFocus', true)">
+          <div class="s-left">
+            <div class="s-icon">⚡</div>
+            <div class="s-meta"><h3>NSDR Fokus & Caj Otak <span class="pro-tag">PRO</span></h3><p>10 Min • Non-Sleep Deep Rest + Alpha 10Hz</p></div>
+          </div>
+          <span style="color:var(--gold);">▶</span>
+        </div>
+      </div>
+    </div>
 
-    .player-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at top, #171F3A, #070B14 75%);
-      z-index: 200;
-      padding: 24px 20px;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-      animation: fadeUp 0.3s ease;
-    }
-    .player-overlay.active { display: flex; }
-    .player-top { width: 100%; max-width: 460px; display: flex; justify-content: space-between; align-items: center; }
-    .pill-tag { background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; color: var(--accent-2); font-weight: 600; }
-    .player-center { max-width: 440px; width: 100%; }
-    .pulse-circle {
-      width: 130px;
-      height: 130px;
-      margin: 0 auto 24px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(129,140,248,0.5), rgba(56,189,248,0.12) 65%, transparent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #fff;
-      animation: softPulse 6s ease-in-out infinite;
-      border: 1px solid rgba(129, 140, 248, 0.35);
-    }
-    @keyframes softPulse {
-      0%, 100% { transform: scale(0.95); box-shadow: 0 0 25px rgba(129,140,248,0.25); }
-      50% { transform: scale(1.12); box-shadow: 0 0 55px rgba(129,140,248,0.6); }
-    }
-    .script-box {
-      min-height: 110px;
-      font-size: 1.08rem;
-      line-height: 1.65;
-      color: #E2E8F0;
-      font-style: italic;
-      padding: 0 8px;
-      transition: opacity 0.6s ease;
-    }
-    .voice-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface-light);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      margin-top: 14px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-    }
+    <div id="tab-sound" class="tab-content">
+      <div class="card">
+        <div class="card-title">🎛️ Studio Bunyi & Frekuensi</div>
+        <p class="card-sub">Campur bunyi alam & gelombang otak mengikut keselesaan telinga anda.</p>
 
-    .preset-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 14px; }
-    .preset-btn {
-      flex-shrink: 0;
-      padding: 8px 14px;
-      border-radius: 20px;
-      background: var(--surface-light);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .preset-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(129, 140, 248, 0.15); }
-    .slider-item { margin-bottom: 16px; }
-    .slider-head { display: flex; justify-content: space-between; font-size: 0.83rem; margin-bottom: 6px; }
-    input[type="range"] { width: 100%; accent-color: var(--accent); height: 6px; cursor: pointer; }
+        <div class="preset-row">
+          <button class="preset-btn" onclick="applyPreset('sleep', this)">🌙 Tidur Kilat</button>
+          <button class="preset-btn" onclick="applyPreset('focus', this)">⚡ Deep Focus</button>
+          <button class="preset-btn" onclick="applyPreset('trance', this)">🌀 Trance PRO</button>
+          <button class="preset-btn" onclick="applyPreset('mute', this)">🔇 Senyap</button>
+        </div>
 
-    .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
-    .t-btn { padding: 9px 4px; background: var(--surface-light); border: 1px solid var(--border); color: var(--text); border-radius: 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
-    .t-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(129, 140, 248, 0.15); }
+        <div class="slider-item">
+          <div class="slider-head"><span>🌧️ Hujan Lembut (Brown Noise)</span><span id="v-brown">0%</span></div>
+          <input type="range" id="s-brown" min="0" max="100" value="0" oninput="updateMixer()" />
+        </div>
 
-    .input-code {
-      width: 100%;
-      padding: 13px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: rgba(7, 11, 20, 0.75);
-      color: var(--text);
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin: 10px 0;
-      outline: none;
-    }
-    .input-code:focus { border-color: var(--accent); }
-    .pro-list { list-style: none; margin: 12px 0 18px; }
-    .pro-list li { font-size: 0.84rem; color: #CBD5E1; margin-bottom: 9px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+        <div class="slider-item">
+          <div class="slider-head"><span>🌊 Angin & Ombak (Pink Noise)</span><span id="v-pink">0%</span></div>
+          <input type="range" id="s-pink" min="0" max="100" value="0" oninput="updateMixer()" />
+        </div>
 
-    nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 15, 28, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0 14px;
-      z-index: 100;
-    }
-    .nav-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 0.7rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      width: 25%;
-      transition: color 0.2s;
-    }
-    .nav-btn.active { color: var(--accent); font-weight: 700; }
-    .nav-icon { font-size: 1.25rem; }
+        <div class="slider-item">
+          <div class="slider-head"><span>✨ Frekuensi 432Hz Harmoni <span class="pro-tag">PRO</span></span><span id="v-432">0%</span></div>
+          <input type="range" id="s-432" min="0" max="100" value="0" oninput="updateMixer(true)" />
+        </div>
 
-    .toast {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-80px);
-      background: #1E293B;
-      color: #fff;
-      padding: 10px 18px;
-      border-radius: 25px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      border: 1px solid var(--accent);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      z-index: 300;
-      transition: transform 0.35s ease;
-      white-space: nowrap;
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-  </style>
-</head>
-<script>
+        <div class="slider-item">
+          <div class="slider-head"><span>🧠 Binaural Theta 4.5Hz (Stereo) <span class="pro-tag">PRO</span></span><span id="v-binaural">0%</span></div>
+          <input type="range" id="s-binaural" min="0" max="100" value="0" oninput="updateMixer(true)" />
+        </div>
+
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
+          <div class="slider-head">
+            <span>⏱️ Pemasa Tidur (Auto-Tutup)</span>
+            <span id="sleepDisplay" style="color:var(--accent-2); font-weight:700;">Tiada</span>
+          </div>
+          <div class="timer-grid">
+            <button class="t-btn active" onclick="setSleepTimer(0, this)">Off</button>
+            <button class="t-btn" onclick="setSleepTimer(10, this)">10m</button>
+            <button class="t-btn" onclick="setSleepTimer(20, this)">20m</button>
+            <button class="t-btn" onclick="setSleepTimer(45, this)">45m</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-pro" class="tab-content">
+      <div class="card" style="border: 1px solid rgba(251, 191, 36, 0.4); background: linear-gradient(155deg, rgba(30,27,75,0.85), rgba(20,29,48,0.9));">
+        <div class="card-title" style="color:var(--gold); font-size:1.15rem;">👑 TenangJiwa PRO (Seumur Hidup)</div>
+        <p class="card-sub">Bayar sekali sahaja. Tiada caj bulanan tersembunyi macam app luar negara.</p>
+        <ul class="pro-list">
+          <li><span>✅</span> <span><b>Semua Sesi Self-Hypnosis & NSDR</b> (Deep Sleep, Buang Overthinking, Fokus)</span></li>
+          <li><span>✅</span> <span><b>Audio Stereo Binaural Beats</b> (Delta, Theta & Alpha) + Frekuensi 432Hz</span></li>
+          <li><span>✅</span> <span><b>Suara Panduan Automatik</b> tanpa had masa</span></li>
+          <li><span>✅</span> <span><b>Akses Selamanya</b> termasuk semua kemas kini skrip akan datang</span></li>
+        </ul>
+        <a href="https://toyyibpay.com/" target="_blank" style="text-decoration:none;">
+          <button class="btn btn-gold">Buka Akses PRO — RM19 Sekali Bayar</button>
+        </a>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔑 Masukkan Kod Akses PRO</div>
+        <p class="card-sub">Sudah membuat bayaran? Masukkan kod anda di bawah. (Untuk cuba demo sekarang, guna kod: <b>TENANGPRO</b>)</p>
+        <input type="text" id="promoInput" class="input-code" placeholder="CONTOH: TENANGPRO" />
+        <button class="btn btn-primary" onclick="activatePro()">Aktifkan PRO Sekarang</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="playerOverlay" class="player-overlay">
+    <div class="player-top">
+      <span id="pWaveTag" class="pill-tag">Theta 4.5Hz</span>
+      <button class="btn btn-outline btn-sm" onclick="closeSession()">Tutup ✕</button>
+    </div>
+
+    <div class="player-center">
+      <h2 id="pTitle" style="font-size:1.25rem; margin-bottom:20px;">Deep Sleep Hypnosis</h2>
+      <div id="pTimer" class="pulse-circle">10:00</div>
+      <div id="pScript" class="script-box">Pejamkan mata anda perlahan-lahan...</div>
+      <div class="voice-toggle" onclick="toggleVoice()">
+        <span id="voiceIcon">🔊</span>
+        <span id="voiceLabel">Suara Panduan: AKTIF</span>
+      </div>
+    </div>
+
+    <div style="width:100%; max-width:440px;">
+      <p style="font-size:0.75rem; color:var(--muted); margin-bottom:12px;">Tip: Pejamkan mata & gunakan earphone untuk kesan gelombang otak stereo.</p>
+      <button class="btn btn-primary" onclick="closeSession(true)">Selesai Sesi</button>
+    </div>
+  </div>
+
+  <nav>
+    <button class="nav-btn active" id="nav-home" onclick="switchTab('home')"><span class="nav-icon">🫧</span>Utama</button>
+    <button class="nav-btn" id="nav-hypno" onclick="switchTab('hypno')"><span class="nav-icon">🌙</span>Hipnosis</button>
+    <button class="nav-btn" id="nav-sound" onclick="switchTab('sound')"><span class="nav-icon">🎛️</span>Bunyi</button>
+    <button class="nav-btn" id="nav-pro" onclick="switchTab('pro')"><span class="nav-icon">👑</span>Pro</button>
+  </nav>
+  <script>
   let isPro = localStorage.getItem('tj_pro_v2') === 'true';
   let completedDays = JSON.parse(localStorage.getItem('tj_days_v2') || '[]');
   let voiceEnabled = true;
