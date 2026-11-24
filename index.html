@@ -2,673 +2,273 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#060b14" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>TenangJiwa — Reda Overthinking & Tidur Lena</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0B101D" />
+  <title>TenangJiwa — Self-Hypnosis & Fokus</title>
   <style>
     :root {
-      --bg: #060b14;
-      --surface: #0f172a;
-      --surface-2: rgba(255, 255, 255, 0.04);
-      --border: rgba(148, 163, 184, 0.14);
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --teal: #2dd4bf;
-      --indigo: #818cf8;
-      --amber: #fbbf24;
-      --rose: #fb7185;
-      --radius: 20px;
-      --nav-h: 68px;
-      --safe-b: env(safe-area-inset-bottom, 0px);
+      --bg: #0B101D; --card: #151E32; --card-light: #1E293B;
+      --text: #F8FAFC; --muted: #94A3B8; --accent: #818CF8;
+      --accent-glow: rgba(129, 140, 248, 0.35); --gold: #FBBF24;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body {
-      min-height: 100%;
-      background: radial-gradient(circle at 50% -10%, #132340 0%, var(--bg) 55%);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.5;
-      overflow-x: hidden;
-    }
-    .app { max-width: 480px; margin: 0 auto; padding: 18px 16px calc(var(--nav-h) + var(--safe-b) + 28px); }
-    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .brand { display: flex; align-items: center; gap: 10px; }
-    .logo {
-      width: 38px; height: 38px; border-radius: 13px;
-      background: linear-gradient(135deg, var(--teal), var(--indigo));
-      display: grid; place-items: center; font-size: 19px;
-      box-shadow: 0 6px 20px rgba(45, 212, 191, 0.25);
-    }
-    .brand h1 { font-size: 1.05rem; font-weight: 700; }
-    .brand p { font-size: 0.74rem; color: var(--muted); }
-    .pro-badge {
-      font-size: 0.72rem; font-weight: 700; padding: 6px 12px;
-      border-radius: 999px; border: 1px solid var(--border);
-      background: var(--surface-2); color: var(--muted); cursor: pointer;
-    }
-    .pro-badge.active { background: rgba(45, 212, 191, 0.16); color: var(--teal); border-color: rgba(45, 212, 191, 0.45); }
-    .screen { display: none; animation: fadeUp 0.28s ease; }
-    .screen.active { display: block; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    h2.title { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
-    p.sub { font-size: 0.84rem; color: var(--muted); margin-bottom: 16px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
-    .sos-card {
-      background: linear-gradient(135deg, rgba(251, 113, 133, 0.18), rgba(129, 140, 248, 0.16));
-      border: 1px solid rgba(251, 113, 133, 0.35); border-radius: var(--radius);
-      padding: 18px; margin-bottom: 14px; display: flex; align-items: center;
-      justify-content: space-between; gap: 12px; cursor: pointer; transition: transform 0.15s;
-    }
-    .sos-card:active { transform: scale(0.98); }
-    .sos-tag {
-      display: inline-block; font-size: 0.68rem; font-weight: 800; color: var(--rose);
-      background: rgba(251, 113, 133, 0.15); padding: 3px 8px; border-radius: 6px; margin-bottom: 6px;
-    }
-    .sos-card h3 { font-size: 1.05rem; margin-bottom: 3px; }
-    .sos-card p { font-size: 0.8rem; color: #cbd5e1; }
-    .sos-play {
-      width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0; background: var(--rose);
-      color: #060b14; border: none; font-size: 1.15rem; font-weight: 800;
-      display: grid; place-items: center; box-shadow: 0 0 24px rgba(251, 113, 133, 0.4);
-    }
-    textarea, .input {
-      width: 100%; background: rgba(6, 11, 20, 0.8); border: 1px solid var(--border);
-      border-radius: 14px; padding: 12px; color: var(--text); font-family: inherit;
-      font-size: 0.9rem; outline: none; resize: none;
-      transition: opacity 1.1s ease, transform 1.1s ease, filter 1.1s ease;
-    }
-    textarea:focus, .input:focus { border-color: var(--teal); }
-    textarea.dissolving { opacity: 0; transform: translateY(-28px) scale(0.94); filter: blur(8px); }
-    .btn { padding: 13px 16px; border-radius: 14px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
-    .btn:active { transform: scale(0.97); }
-    .btn-primary { background: linear-gradient(135deg, var(--teal), #0ea5e9); color: #06111c; }
-    .btn-secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
-    .btn-full { width: 100%; }
-    .btn-row { display: flex; gap: 10px; }
-    .btn-row .btn { flex: 1; }
-    .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .q-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
-      padding: 14px; cursor: pointer; text-align: left; color: var(--text);
-    }
-    .q-card .ic { font-size: 1.5rem; margin-bottom: 6px; display: block; }
-    .q-card h4 { font-size: 0.92rem; margin-bottom: 2px; }
-    .q-card p { font-size: 0.74rem; color: var(--muted); }
-    .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-    .pill {
-      padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border);
-      background: var(--surface-2); color: var(--muted); font-size: 0.78rem; font-weight: 600; cursor: pointer;
-    }
-    .pill.active { background: rgba(45, 212, 191, 0.18); color: var(--teal); border-color: rgba(45, 212, 191, 0.5); }
-    .stage { display: flex; flex-direction: column; align-items: center; padding: 20px 0 14px; }
-    .ring {
-      width: 210px; height: 210px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(45, 212, 191, 0.2) 0%, transparent 72%);
-      border: 1.5px solid rgba(45, 212, 191, 0.3); display: grid; place-items: center;
-    }
-    .orb {
-      width: 115px; height: 115px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--teal), var(--indigo));
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      box-shadow: 0 0 40px rgba(45, 212, 191, 0.35); transform: scale(0.82);
-    }
-    .orb-phase { font-size: 0.88rem; font-weight: 800; color: #05101a; }
-    .orb-sec { font-size: 1.65rem; font-weight: 900; color: #05101a; line-height: 1.1; }
-    .clock { margin-top: 12px; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-    .script-box {
-      background: rgba(6, 11, 20, 0.65); border: 1px solid var(--border); border-radius: 14px;
-      padding: 14px; margin: 12px 0 14px; text-align: center; min-height: 76px;
-      display: grid; place-items: center; font-size: 0.9rem; color: #e2e8f0;
-    }
-    .toggle-row {
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.8rem; color: var(--muted); padding: 8px 0;
-      border-top: 1px solid var(--border); margin-top: 10px;
-    }
-    .toggle-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-    .sound-row { padding: 13px 0; border-bottom: 1px solid var(--border); }
-    .sound-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .sound-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .sound-title { font-size: 0.92rem; font-weight: 600; }
-    .sound-desc { font-size: 0.72rem; color: var(--muted); }
-    .s-btn {
-      padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
-      background: var(--surface-2); color: var(--muted); font-size: 0.76rem; font-weight: 700; cursor: pointer;
-    }
-    .s-btn.on { background: rgba(45, 212, 191, 0.2); color: var(--teal); border-color: var(--teal); }
-    input[type="range"] { width: 100%; accent-color: var(--teal); }
-    .day-card {
-      display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px;
-      background: var(--surface); border: 1px solid var(--border); margin-bottom: 10px; cursor: pointer;
-    }
-    .day-card.locked { opacity: 0.65; }
-    .day-num {
-      width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
-      background: rgba(129, 140, 248, 0.16); color: var(--indigo);
-      display: grid; place-items: center; font-weight: 800; font-size: 0.85rem;
-    }
-    .day-card.done .day-num { background: rgba(45, 212, 191, 0.2); color: var(--teal); }
-    .day-info h4 { font-size: 0.92rem; margin-bottom: 2px; }
-    .day-info p { font-size: 0.76rem; color: var(--muted); }
-    .day-status { margin-left: auto; font-size: 0.75rem; font-weight: 700; color: var(--teal); }
-    .dimmer-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.94); z-index: 300;
-      display: none; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 24px;
-    }
-    .dimmer-overlay.show { display: flex; }
-    .dimmer-overlay p { color: #334155; font-size: 0.85rem; margin-top: 12px; }
-    .dimmer-phase { font-size: 1.5rem; font-weight: 700; color: #1e293b; }
-    .nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      height: calc(var(--nav-h) + var(--safe-b)); padding-bottom: var(--safe-b);
-      background: rgba(6, 11, 20, 0.94); backdrop-filter: blur(14px);
-      border-top: 1px solid var(--border); display: flex; justify-content: center; z-index: 100;
-    }
-    .nav-inner { width: 100%; max-width: 480px; display: grid; grid-template-columns: repeat(4, 1fr); }
-    .nav-btn {
-      background: none; border: none; color: var(--muted); display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 3px; font-size: 0.7rem; font-weight: 600; cursor: pointer;
-    }
-    .nav-btn span { font-size: 1.25rem; }
-    .nav-btn.active { color: var(--teal); }
-    .toast {
-      position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-80px);
-      background: #1e293b; color: var(--text); border: 1px solid rgba(45, 212, 191, 0.45);
-      padding: 10px 18px; border-radius: 999px; font-size: 0.82rem; font-weight: 600;
-      z-index: 400; transition: transform 0.25s ease; white-space: nowrap;
-    }
-    .toast.show { transform: translateX(-50%) translateY(0); }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); padding-bottom: 90px; min-height: 100vh; overflow-x: hidden; }
+    header { padding: 20px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-size: 1.25rem; font-weight: 700; letter-spacing: 0.5px; }
+    .brand span { color: var(--accent); }
+    .badge-pro { background: linear-gradient(135deg, #F59E0B, #FBBF24); color: #0B101D; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; }
+    .badge-free { background: var(--card-light); color: var(--muted); font-size: 0.7rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+    .container { padding: 15px 20px; max-width: 500px; margin: 0 auto; }
+    .tab-content { display: none; animation: fadeIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .card { background: var(--card); border-radius: 18px; padding: 18px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.05); }
+    .card h2 { font-size: 1.05rem; margin-bottom: 6px; }
+    .card p { font-size: 0.85rem; color: var(--muted); line-height: 1.45; }
+    .sos-card { background: linear-gradient(145deg, #1E1B4B, #151E32); border: 1px solid rgba(129, 140, 248, 0.3); text-align: center; padding: 24px 18px; }
+    .orb-wrap { position: relative; width: 150px; height: 150px; margin: 20px auto; display: flex; align-items: center; justify-content: center; }
+    .orb { width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, #A5B4FC, #4F46E5); box-shadow: 0 0 40px var(--accent-glow); transition: transform 4s ease-in-out, box-shadow 4s ease-in-out; }
+    .orb.inhale { transform: scale(1.45); box-shadow: 0 0 65px rgba(129, 140, 248, 0.7); }
+    .orb.exhale { transform: scale(0.85); box-shadow: 0 0 20px rgba(129, 140, 248, 0.2); }
+    .orb-text { position: absolute; font-size: 0.9rem; font-weight: 700; text-shadow: 0 2px 6px rgba(0,0,0,0.6); pointer-events: none; }
+    .btn { width: 100%; padding: 13px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-primary { background: var(--accent); color: #0B101D; }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .btn-gold { background: linear-gradient(135deg, #F59E0B, #FBBF24); color: #0B101D; font-weight: 700; }
+    .session-item { display: flex; justify-content: space-between; align-items: center; padding: 14px; background: var(--card-light); border-radius: 14px; margin-bottom: 10px; cursor: pointer; border: 1px solid transparent; }
+    .session-info h3 { font-size: 0.95rem; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+    .session-info span { font-size: 0.75rem; color: var(--muted); }
+    .lock-tag { font-size: 0.65rem; background: rgba(251, 191, 36, 0.15); color: var(--gold); padding: 2px 7px; border-radius: 6px; font-weight: 700; }
+    .player-box { display: none; background: #0F172A; border: 1px solid var(--accent); border-radius: 18px; padding: 20px; text-align: center; margin-bottom: 16px; }
+    .player-box.active { display: block; }
+    .script-display { min-height: 90px; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; line-height: 1.6; color: #E2E8F0; font-style: italic; margin: 18px 0; padding: 0 10px; transition: opacity 0.6s; }
+    .timer-pill { display: inline-block; background: var(--card-light); padding: 5px 14px; border-radius: 20px; font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 10px; }
+    .slider-group { margin-bottom: 16px; }
+    .slider-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; }
+    input[type="range"] { width: 100%; accent-color: var(--accent); height: 6px; border-radius: 5px; }
+    .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+    .t-btn { padding: 8px; background: var(--card-light); border: 1px solid transparent; color: var(--text); border-radius: 10px; font-size: 0.8rem; cursor: pointer; }
+    .t-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(129, 140, 248, 0.1); }
+    .input-box { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--card-light); background: #0B101D; color: var(--text); font-size: 0.95rem; margin: 10px 0; text-transform: uppercase; letter-spacing: 1px; }
+    nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-around; padding: 10px 0 14px; z-index: 100; }
+    .nav-btn { background: none; border: none; color: var(--muted); font-size: 0.72rem; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 25%; }
+    .nav-btn.active { color: var(--accent); font-weight: 600; }
+    .nav-icon { font-size: 1.25rem; }
   </style>
 </head>
 <body>
-  <div id="toast" class="toast">Tersimpan</div>
+  <header>
+    <div class="brand">Tenang<span>Jiwa</span></div>
+    <div id="statusBadge" class="badge-free">PERCUMA</div>
+  </header>
 
-  <div id="dimmer" class="dimmer-overlay" onclick="toggleDimmer(false)">
-    <div id="dimmer-phase" class="dimmer-phase">Pejam mata & ikut getaran...</div>
-    <p>Ketik mana-mana skrin untuk cerahkan semula</p>
-  </div>
-
-  <div class="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">🌙</div>
-        <div>
-          <h1>TenangJiwa</h1>
-          <p id="greeting">Selamat malam</p>
+  <div class="container">
+    <div id="tab-home" class="tab-content active">
+      <div class="card sos-card">
+        <h2>SOS Reset Minda (2 Minit)</h2>
+        <p>Tengah serabut, cemas, atau <i>overthinking</i>? Tekan mula dan ikut ritma cahaya ini.</p>
+        <div class="orb-wrap">
+          <div id="sosOrb" class="orb"></div>
+          <div id="sosText" class="orb-text">SEDIA</div>
         </div>
+        <button id="sosBtn" class="btn btn-primary" onclick="toggleSOS()">Mula Tenangkan Diri</button>
       </div>
-      <button id="pro-badge" class="pro-badge" onclick="goTab('program')">PERCUMA</button>
-    </header>
-
-    <section id="tab-home" class="screen active">
-      <div class="sos-card" onclick="startSOS()">
-        <div>
-          <span class="sos-tag">SOS • 60 SAAT</span>
-          <h3>Otak Bising / Cemas?</h3>
-          <p>Tekan sini untuk redakan degupan jantung serta-merta dengan getaran nafas.</p>
-        </div>
-        <button class="sos-play">▶</button>
-      </div>
-
       <div class="card">
-        <h3 style="font-size:0.98rem; margin-bottom:4px;">💨 Ritual Lepaskan Fikiran</h3>
-        <p style="font-size:0.78rem; color:var(--muted); margin-bottom:10px;">
-          Taip apa yang buat anda serabut malam ini. Ia tidak disimpan — ia akan lenyap terus.
-        </p>
-        <textarea id="dump-input" rows="3" placeholder="Contoh: Risau pasal kerja esok, takut tak sempat siap..."></textarea>
-        <button class="btn btn-primary btn-full" style="margin-top:10px;" onclick="releaseThought()">Lepaskan & Tenang</button>
+        <h2>Rekod Ketenangan Anda</h2>
+        <p id="streakText">Anda telah melengkapkan <b>0</b> sesi minggu ini.</p>
       </div>
-
-      <div class="quick-grid">
-        <button class="q-card" onclick="launchSession('sleep', 5)">
-          <span class="ic">😴</span>
-          <h4>Tidur 4-7-8</h4>
-          <p>Sedia untuk lena dalam 5 min</p>
-        </button>
-        <button class="q-card" onclick="goTab('sound')">
-          <span class="ic">🌧️</span>
-          <h4>Bunyi Malam</h4>
-          <p>Hujan, ombak & auto-off</p>
-        </button>
-      </div>
-
-      <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-size:0.76rem; color:var(--muted);">Kemajuan Program 7 Hari</div>
-          <div style="font-size:1.05rem; font-weight:700; color:var(--teal);" id="home-prog">0 / 7 Hari Selesai</div>
-        </div>
-        <button class="btn btn-secondary" style="padding:9px 14px; font-size:0.8rem;" onclick="goTab('program')">Buka Program →</button>
-      </div>
-    </section>
-
-    <section id="tab-session" class="screen">
-      <h2 class="title" id="session-title">Sesi Pernafasan</h2>
-      <p class="sub" id="session-desc">Genggam telefon, pejam mata dan ikut rentak getaran.</p>
-
-      <div class="pills" id="mode-pills">
-        <button class="pill active" data-mode="sos" onclick="setMode('sos')">🚨 SOS 4-4-6</button>
-        <button class="pill" data-mode="sleep" onclick="setMode('sleep')">🌙 Tidur 4-7-8</button>
-        <button class="pill" data-mode="focus" onclick="setMode('focus')">✨ Fokus 4-4-4-4</button>
-      </div>
-
-      <div class="card">
-        <div class="stage">
-          <div class="ring">
-            <div id="orb" class="orb">
-              <div id="orb-phase" class="orb-phase">Sedia</div>
-              <div id="orb-sec" class="orb-sec">—</div>
-            </div>
-          </div>
-          <div class="clock">Baki masa: <strong id="clock">01:00</strong></div>
-        </div>
-
-        <div class="script-box" id="script-text">
-          Duduk atau baring dengan selesa. Tekan Mula apabila bersedia.
-        </div>
-
-        <div class="btn-row">
-          <button id="play-btn" class="btn btn-primary" onclick="toggleSession()">Mula Sesi</button>
-          <button class="btn btn-secondary" onclick="toggleDimmer(true)">🌑 Gelap Mata</button>
-        </div>
-
-        <div class="toggle-row">
-          <label><input type="checkbox" id="haptic-on" checked /> Getaran (Pejam Mata)</label>
-          <label><input type="checkbox" id="voice-on" /> Panduan Suara BM</label>
-        </div>
-      </div>
-    </section>
-
-    <section id="tab-sound" class="screen">
-      <h2 class="title">Bunyi Tidur & Fokus</h2>
-      <p class="sub">Gabungkan bunyi dan tetapkan pemasa tutup automatik sebelum tidur.</p>
-
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span style="font-size:0.86rem; font-weight:700;">⏱️ Pemasa Tidur (Auto-Off)</span>
-          <span id="sleep-timer-label" style="font-size:0.8rem; color:var(--teal); font-weight:700;">Tiada</span>
-        </div>
-        <div class="pills" style="margin-bottom:0;">
-          <button class="pill" onclick="setSleepTimer(10)">10 Min</button>
-          <button class="pill" onclick="setSleepTimer(20)">20 Min</button>
-          <button class="pill" onclick="setSleepTimer(30)">30 Min</button>
-          <button class="pill" onclick="setSleepTimer(0)">Batal</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="sound-row">
-          <div class="sound-top">
-            <div>
-              <div class="sound-title">🌧️ Hujan Malam Lembut</div>
-              <div class="sound-desc">Frekuensi hangat untuk tutup bunyi bising luar</div>
-            </div>
-            <button id="btn-rain" class="s-btn" onclick="toggleSound('rain')">Mati</button>
-          </div>
-          <input type="range" id="vol-rain" min="0" max="1" step="0.05" value="0.45" oninput="setVol('rain', this.value)" />
-        </div>
-
-        <div class="sound-row">
-          <div class="sound-top">
-            <div>
-              <div class="sound-title">🌊 Alunan Ombak Perlahan</div>
-              <div class="sound-desc">Ombak beralun setiap 8 saat ikut rentak tidur</div>
-            </div>
-            <button id="btn-waves" class="s-btn" onclick="toggleSound('waves')">Mati</button>
-          </div>
-          <input type="range" id="vol-waves" min="0" max="1" step="0.05" value="0.5" oninput="setVol('waves', this.value)" />
-        </div>
-
-        <div class="sound-row">
-          <div class="sound-top">
-            <div>
-              <div class="sound-title">🎧 Gelombang Tidur Theta (Pro 🔒)</div>
-              <div class="sound-desc">Binaural 4Hz (Guna earphone untuk kesan mendalam)</div>
-            </div>
-            <button id="btn-binaural" class="s-btn" onclick="toggleSound('binaural')">Mati</button>
-          </div>
-          <input type="range" id="vol-binaural" min="0" max="1" step="0.05" value="0.3" oninput="setVol('binaural', this.value)" />
-        </div>
-      </div>
-
-      <button class="btn btn-secondary btn-full" onclick="stopAllSounds()">Hentikan Semua Bunyi</button>
-    </section>
-
-    <section id="tab-program" class="screen">
-      <h2 class="title">Program 7 Hari: Reset Tidur</h2>
-      <p class="sub">Latihan 3–5 minit setiap malam untuk hentikan tabiat overthinking.</p>
-
-      <div id="program-list"></div>
-
-      <div class="card" style="margin-top:16px; border-color:rgba(45,212,191,0.35);">
-        <h3 style="font-size:1rem; margin-bottom:4px;">⭐ Buka Akses Penuh (TenangJiwa Pro)</h3>
-        <p style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;">
-          Bayar sekali seumur hidup (RM15) — buka Hari 2–7 Program Reset Tidur & Audio Binaural Theta.
-        </p>
-        <a href="https://toyyibpay.com" target="_blank" class="btn btn-primary btn-full" style="display:block; text-align:center; text-decoration:none; margin-bottom:12px;">
-          Dapatkan Kod Pro (RM15 Sekali Bayar)
-        </a>
-        <div style="display:flex; gap:8px;">
-          <input type="text" id="promo-code" class="input" placeholder="Masukkan kod (cth: TENANGPRO)" />
-          <button class="btn btn-secondary" onclick="redeemPro()">Buka</button>
-        </div>
-        <div id="pro-msg" style="font-size:0.78rem; margin-top:8px;"></div>
-      </div>
-    </section>
-  </div>
-
-  <nav class="nav">
-    <div class="nav-inner">
-      <button class="nav-btn active" data-tab="home" onclick="goTab('home')"><span>🏠</span>Utama</button>
-      <button class="nav-btn" data-tab="session" onclick="goTab('session')"><span>🫁</span>Sesi</button>
-      <button class="nav-btn" data-tab="sound" onclick="goTab('sound')"><span>🎧</span>Bunyi</button>
-      <button class="nav-btn" data-tab="program" onclick="goTab('program')"><span>🌙</span>7-Hari</button>
     </div>
+
+    <div id="tab-hypno" class="tab-content">
+      <div id="hypnoPlayer" class="player-box">
+        <div id="playerTitle" style="font-weight:700; font-size:1rem;">Tajuk Sesi</div>
+        <div id="playerTimer" class="timer-pill">05:00</div>
+        <div id="scriptText" class="script-display">Pejamkan mata dan tarik nafas perlahan...</div>
+        <button class="btn btn-outline" onclick="stopHypno()">Tamatkan Sesi</button>
+      </div>
+      <div class="card">
+        <h2>Sesi Self-Hypnosis & Visualisasi</h2>
+        <p style="margin-bottom:14px;">Direka gaya <i>deep trance</i> untuk rehatkan minda bawah sedar.</p>
+        <div class="session-item" onclick="startHypno('sleep', false)">
+          <div class="session-info"><h3>🌙 Tidur Lena (Asas)</h3><span>5 Min • Relaksasi Otot & Nafas</span></div><span>▶</span>
+        </div>
+        <div class="session-item" onclick="startHypno('deepSleep', true)">
+          <div class="session-info"><h3>🌌 Deep Sleep Hypnosis <span class="lock-tag">PRO</span></h3><span>15 Min • Gelombang Delta + Skrip Trance</span></div><span>▶</span>
+        </div>
+        <div class="session-item" onclick="startHypno('overthink', true)">
+          <div class="session-info"><h3>🧠 Buang Overthinking <span class="lock-tag">PRO</span></h3><span>10 Min • Gelombang Theta + Lepaskan Fikiran</span></div><span>▶</span>
+        </div>
+        <div class="session-item" onclick="startHypno('nsdr', true)">
+          <div class="session-info"><h3>⚡ NSDR Fokus & Reset <span class="lock-tag">PRO</span></h3><span>10 Min • Gelombang Alpha + Caj Semula Otak</span></div><span>▶</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-sound" class="tab-content">
+      <div class="card">
+        <h2>Soundscape & Frekuensi</h2>
+        <p style="margin-bottom:16px;">Gabungkan bunyi latar untuk bantu tidur atau fokus kerja.</p>
+        <div class="slider-group">
+          <div class="slider-label"><span>🌊 Brown Noise (Hujan / Ombak)</span><span id="val-noise">0%</span></div>
+          <input type="range" id="volNoise" min="0" max="100" value="0" oninput="updateAudio()" />
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span>✨ Frekuensi 432Hz + Theta <span class="lock-tag">PRO</span></span><span id="val-tone">0%</span></div>
+          <input type="range" id="volTone" min="0" max="100" value="0" oninput="updateAudio(true)" />
+        </div>
+        <div style="margin-top:20px;">
+          <div class="slider-label"><span>⏱️ Sleep Timer (Auto-Tutup)</span><span id="sleepCountdown" style="color:var(--accent);">Tiada</span></div>
+          <div class="timer-grid">
+            <button class="t-btn active" onclick="setSleepTimer(0, this)">Off</button>
+            <button class="t-btn" onclick="setSleepTimer(5, this)">5m</button>
+            <button class="t-btn" onclick="setSleepTimer(15, this)">15m</button>
+            <button class="t-btn" onclick="setSleepTimer(30, this)">30m</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-pro" class="tab-content">
+      <div class="card" style="border: 1px solid rgba(251, 191, 36, 0.35);">
+        <h2 style="color:var(--gold);">Naik Taraf ke TenangJiwa PRO</h2>
+        <p style="margin-bottom:12px;">Akses penuh seumur hidup (bayar sekali sahaja):</p>
+        <ul style="font-size:0.85rem; color:#CBD5E1; padding-left:18px; line-height:1.8; margin-bottom:16px;">
+          <li>Semua sesi <b>Deep Sleep Hypnosis</b> & <b>NSDR Fokus</b></li>
+          <li>Frekuensi <b>432Hz & Binaural Theta</b> tanpa had</li>
+          <li>Sesi <b>Buang Overthinking</b> bila-bila masa</li>
+        </ul>
+        <a href="https://toyyibpay.com/" target="_blank" style="text-decoration:none;">
+          <button class="btn btn-gold">Dapatkan Kod PRO (RM19 Sekali Bayar)</button>
+        </a>
+      </div>
+      <div class="card">
+        <h2>Sudah Ada Kod Akses?</h2>
+        <p>Masukkan kod anda (Kod demo: <b>TENANGPRO</b>)</p>
+        <input type="text" id="promoInput" class="input-box" placeholder="MASUKKAN KOD PRO" />
+        <button class="btn btn-primary" onclick="unlockPro()">Aktifkan PRO</button>
+        <p id="promoMsg" style="margin-top:8px; font-size:0.8rem;"></p>
+      </div>
+    </div>
+  </div>
+
+  <nav>
+    <button class="nav-btn active" onclick="switchTab('home', this)"><span class="nav-icon">🫧</span>SOS</button>
+    <button class="nav-btn" onclick="switchTab('hypno', this)"><span class="nav-icon">🌙</span>Hipnosis</button>
+    <button class="nav-btn" onclick="switchTab('sound', this)"><span class="nav-icon">🎧</span>Bunyi</button>
+    <button class="nav-btn" onclick="switchTab('pro', this)"><span class="nav-icon">👑</span>Pro</button>
   </nav>
-    <script>
-    const PROGRAM = [
-      { day: 1, title: 'Hari 1: Matikan Bunyi Bising Minda', desc: 'Teknik asas 4-4-6 untuk lepaskan penat hari ini.', mode: 'sos', min: 3, free: true },
-      { day: 2, title: 'Hari 2: Lepaskan Beban Kerja', desc: 'Scan badan dari bahu hingga kaki agar otot rehat.', mode: 'sos', min: 4, free: false },
-      { day: 3, title: 'Hari 3: Perlahankan Degupan Jantung', desc: 'Latihan 4-7-8 persediaan tidur mendalam.', mode: 'sleep', min: 4, free: false },
-      { day: 4, title: 'Hari 4: Urus Fikiran "Bagaimana Kalau..."', desc: 'Berdamai dengan perkara di luar kawalan anda.', mode: 'sleep', min: 5, free: false },
-      { day: 5, title: 'Hari 5: Tidur Tanpa Tengok Jam', desc: 'Rentak pernafasan panjang untuk tutup minda sedar.', mode: 'sleep', min: 5, free: false },
-      { day: 6, title: 'Hari 6: Fokus & Tenang Pagi', desc: 'Nafas kotak 4-4-4-4 untuk kawal emosi harian.', mode: 'focus', min: 4, free: false },
-      { day: 7, title: 'Hari 7: Ketenangan Sepenuhnya', desc: 'Gabungan teknik penuh untuk tidur lena setiap malam.', mode: 'sleep', min: 5, free: false }
-    ];
+  <script>
+  let isPro = localStorage.getItem('tj_pro') === 'true';
+  let sessionsDone = parseInt(localStorage.getItem('tj_sessions') || '0');
 
-    const MODES = {
-      sos: {
-        title: 'Reda Overthinking (4-4-6)',
-        desc: 'Hembusan lebih panjang memberi isyarat selamat kepada saraf anda.',
-        phases: [
-          { label: 'Tarik', sec: 4, scale: 1.28, vib: 60 },
-          { label: 'Tahan', sec: 4, scale: 1.28, vib: 0 },
-          { label: 'Hembus', sec: 6, scale: 0.78, vib: [40, 60, 40] }
-        ],
-        scripts: [
-          'Tarik nafas perlahan melalui hidung... rasakan perut mengembang.',
-          'Lepaskan bahu anda yang tegang. Anda selamat di saat ini.',
-          'Tidak perlu selesaikan masalah esok pada malam ini. Biarkan ia pergi.'
-        ]
-      },
-      sleep: {
-        title: 'Tidur Lena (4-7-8)',
-        desc: 'Teknik penenang saraf semula jadi untuk bantu mata cepat terlelap.',
-        phases: [
-          { label: 'Tarik', sec: 4, scale: 1.26, vib: 50 },
-          { label: 'Tahan', sec: 7, scale: 1.26, vib: 0 },
-          { label: 'Hembus', sec: 8, scale: 0.75, vib: [40, 80, 40] }
-        ],
-        scripts: [
-          'Pejamkan mata. Rasakan tilam menampung seluruh berat badan anda.',
-          'Hembuskan nafas panjang dan perlahan... biarkan kelopak mata terasa berat.',
-          'Setiap hembusan membawa anda semakin dalam ke arah lena.'
-        ]
-      },
-      focus: {
-        title: 'Fokus Jelas (4-4-4-4)',
-        desc: 'Nafas kotak untuk menstabilkan emosi dan menajamkan tumpuan.',
-        phases: [
-          { label: 'Tarik', sec: 4, scale: 1.24, vib: 50 },
-          { label: 'Tahan', sec: 4, scale: 1.24, vib: 0 },
-          { label: 'Hembus', sec: 4, scale: 0.82, vib: 50 },
-          { label: 'Tahan', sec: 4, scale: 0.82, vib: 0 }
-        ],
-        scripts: [
-          'Tegakkan duduk. Fokus hanya pada kiraan nafas anda sekarang.',
-          'Satu perkara pada satu masa. Minda anda tenang dan terkawal.',
-          'Tarik tenaga baharu, hembus keluar segala rasa serabut.'
-        ]
-      }
-    };
-
-    const st = {
-      isPro: localStorage.getItem('tj2_pro') === 'true',
-      doneDays: JSON.parse(localStorage.getItem('tj2_days') || '[]'),
-      mode: 'sos', min: 1, activeDay: null, running: false,
-      remSec: 60, pIdx: 0, pSec: 4, sIdx: 0, timer: null,
-      sleepTimerId: null, sleepSecLeft: 0
-    };
-
-    function init() {
-      const h = new Date().getHours();
-      document.getElementById('greeting').textContent =
-        h < 5 ? 'Masih berjaga? Jom tenang.' : h < 12 ? 'Selamat pagi' : h < 18 ? 'Selamat petang' : 'Selamat malam';
-      updateProUI(); renderProgram(); resetSession();
+  function refreshUI() {
+    document.getElementById('streakText').innerHTML = `Anda telah melengkapkan <b>${sessionsDone}</b> sesi ketenangan.`;
+    const badge = document.getElementById('statusBadge');
+    if (isPro) {
+      badge.className = 'badge-pro'; badge.innerText = 'PRO AKTIF';
+      document.querySelectorAll('.lock-tag').forEach(el => el.style.display = 'none');
     }
+  }
+  refreshUI();
 
-    function toast(msg) {
-      const el = document.getElementById('toast');
-      el.textContent = msg; el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 2300);
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function unlockPro() {
+    const code = document.getElementById('promoInput').value.trim().toUpperCase();
+    const msg = document.getElementById('promoMsg');
+    if (code === 'TENANGPRO') {
+      isPro = true; localStorage.setItem('tj_pro', 'true'); refreshUI();
+      msg.style.color = '#34D399'; msg.innerText = 'Tahniah! Semua ciri PRO kini dibuka.';
+    } else {
+      msg.style.color = '#F87171'; msg.innerText = 'Kod tidak sah. Sila cuba lagi.';
     }
+  }
 
-    function goTab(name) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('tab-' + name).classList.add('active');
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
-      window.scrollTo(0, 0);
+  let sosInterval = null;
+  function toggleSOS() {
+    const orb = document.getElementById('sosOrb'), txt = document.getElementById('sosText'), btn = document.getElementById('sosBtn');
+    if (sosInterval) {
+      clearInterval(sosInterval); sosInterval = null; orb.className = 'orb';
+      txt.innerText = 'SEDIA'; btn.innerText = 'Mula Tenangkan Diri'; return;
     }
+    btn.innerText = 'Berhenti'; let step = 0;
+    const phases = [{ text: 'TARIK NAFAS', cls: 'orb inhale' }, { text: 'TAHAN', cls: 'orb inhale' }, { text: 'HEMBUS PERLAHAN', cls: 'orb exhale' }];
+    function runPhase() { const p = phases[step % 3]; txt.innerText = p.text; orb.className = p.cls; step++; }
+    runPhase(); sosInterval = setInterval(runPhase, 4000);
+  }
 
-    function releaseThought() {
-      const ta = document.getElementById('dump-input');
-      if (!ta.value.trim()) { toast('Taip dahulu apa yang mengganggu anda'); return; }
-      playSoftChime(432);
-      if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
-      ta.classList.add('dissolving');
-      setTimeout(() => { ta.value = ''; ta.classList.remove('dissolving'); toast('Fikiran dilepaskan. Tarik nafas dalam 🌿'); }, 1150);
-    }
+  const scripts = {
+    sleep: { title: 'Tidur Lena (Asas)', mins: 5, lines: ['Baring dengan selesa dan pejamkan mata anda...', 'Tarik nafas dalam-dalam... lepaskan ketegangan hari ini.', 'Rasakan kelopak mata anda semakin berat dan tenang.', 'Biarkan bahu anda jatuh... minda anda senyap.', 'Anda selamat, tenang, dan bersedia untuk tidur lena.'] },
+    deepSleep: { title: 'Deep Sleep Hypnosis', mins: 15, lines: ['Bayangkan tangga kayu menuju ke taman yang damai...', 'Dengan setiap langkah ke bawah, tubuh anda dua kali lebih relaks.', 'Lima... empat... segala bunyi luar semakin pudar.', 'Tiga... dua... fikiran anda perlahan-lahan berhenti berputar.', 'Satu... anda kini berada di ruang tidur paling lena.'] },
+    overthink: { title: 'Buang Overthinking', mins: 10, lines: ['Perhatikan fikiran yang bermain di kepala anda sekarang.', 'Bayangkan setiap fikiran itu adalah daun yang hanyut di sungai.', 'Anda tidak perlu mengejarnya. Hanya lihat ia berlalu pergi.', 'Kembali kepada nafas anda... masuk tenang, keluar lega.', 'Minda anda kini jernih, ringan, dan terkawal.'] },
+    nsdr: { title: 'NSDR Fokus & Reset', mins: 10, lines: ['Rehatkan tubuh sepenuhnya tanpa perlu tidur.', 'Alihkan fokus ke hujung jari kaki... naik ke lutut dan pinggang.', 'Biarkan otak anda melepaskan keletihan dan memuat semula tenaga.', 'Setiap hembusan nafas membawa ketajaman dan fokus baharu.', 'Anda akan bangun dengan minda yang segar.'] }
+  };
 
-    function startSOS() { st.activeDay = null; launchSession('sos', 1); toggleSession(); }
+  let hypnoTimer = null, scriptTimer = null;
+  function startHypno(key, requiresPro) {
+    if (requiresPro && !isPro) { alert('Sesi khas PRO. Masukkan kod TENANGPRO di tab Pro.'); return; }
+    stopHypno(); const s = scripts[key];
+    document.getElementById('hypnoPlayer').classList.add('active');
+    document.getElementById('playerTitle').innerText = s.title;
+    let seconds = s.mins * 60, lineIdx = 0;
+    const scriptEl = document.getElementById('scriptText'); scriptEl.innerText = s.lines[0];
+    if (document.getElementById('volNoise').value == 0) { document.getElementById('volNoise').value = 25; updateAudio(); }
+    scriptTimer = setInterval(() => {
+      lineIdx = (lineIdx + 1) % s.lines.length; scriptEl.style.opacity = 0;
+      setTimeout(() => { scriptEl.innerText = s.lines[lineIdx]; scriptEl.style.opacity = 1; }, 600);
+    }, 8000);
+    hypnoTimer = setInterval(() => {
+      seconds--;
+      document.getElementById('playerTimer').innerText = `${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;
+      if (seconds <= 0) { sessionsDone++; localStorage.setItem('tj_sessions', sessionsDone); refreshUI(); stopHypno(); alert('Sesi selesai!'); }
+    }, 1000);
+  }
+  function stopHypno() { clearInterval(hypnoTimer); clearInterval(scriptTimer); document.getElementById('hypnoPlayer').classList.remove('active'); }
 
-    function launchSession(mode, min) {
-      st.mode = mode; st.min = min;
-      document.querySelectorAll('#mode-pills .pill').forEach(p => p.classList.toggle('active', p.dataset.mode === mode));
-      resetSession(); goTab('session');
-    }
+  let audioCtx, noiseGain, toneGain;
+  function initAudio() {
+    if (audioCtx) { if (audioCtx.state === 'suspended') audioCtx.resume(); return; }
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const buf = audioCtx.createBuffer(1, 2 * audioCtx.sampleRate, audioCtx.sampleRate);
+    const out = buf.getChannelData(0); let last = 0;
+    for (let i = 0; i < out.length; i++) { const w = Math.random()*2-1; out[i] = (last + 0.02*w)/1.02; last = out[i]; out[i] *= 3.5; }
+    const wn = audioCtx.createBufferSource(); wn.buffer = buf; wn.loop = true;
+    noiseGain = audioCtx.createGain(); noiseGain.gain.value = 0; wn.connect(noiseGain); noiseGain.connect(audioCtx.destination); wn.start();
+    const o1 = audioCtx.createOscillator(), o2 = audioCtx.createOscillator();
+    o1.frequency.value = 216; o2.frequency.value = 220;
+    toneGain = audioCtx.createGain(); toneGain.gain.value = 0;
+    o1.connect(toneGain); o2.connect(toneGain); toneGain.connect(audioCtx.destination); o1.start(); o2.start();
+  }
 
-    function setMode(mode) {
-      st.activeDay = null; st.mode = mode; st.min = mode === 'sos' ? 1 : 3;
-      document.querySelectorAll('#mode-pills .pill').forEach(p => p.classList.toggle('active', p.dataset.mode === mode));
-      resetSession();
-    }
+  function updateAudio(checkPro = false) {
+    const tSlider = document.getElementById('volTone');
+    if (checkPro && !isPro && tSlider.value > 0) { tSlider.value = 0; alert('Ciri PRO. Masukkan kod TENANGPRO di tab Pro.'); return; }
+    initAudio();
+    const nVal = document.getElementById('volNoise').value, tVal = tSlider.value;
+    document.getElementById('val-noise').innerText = nVal + '%';
+    document.getElementById('val-tone').innerText = tVal + '%';
+    noiseGain.gain.setTargetAtTime((nVal/100)*0.25, audioCtx.currentTime, 0.1);
+    toneGain.gain.setTargetAtTime((tVal/100)*0.08, audioCtx.currentTime, 0.1);
+  }
 
-    function fmt(s) { return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; }
-
-    function resetSession() {
-      clearInterval(st.timer);
-      if ('speechSynthesis' in window) speechSynthesis.cancel();
-      st.running = false; st.remSec = st.min * 60; st.pIdx = 0; st.sIdx = 0;
-      st.pSec = MODES[st.mode].phases[0].sec;
-      document.getElementById('session-title').textContent = st.activeDay ? PROGRAM[st.activeDay - 1].title : MODES[st.mode].title;
-      document.getElementById('session-desc').textContent = MODES[st.mode].desc;
-      document.getElementById('clock').textContent = fmt(st.remSec);
-      document.getElementById('orb-phase').textContent = 'Sedia';
-      document.getElementById('orb-sec').textContent = '—';
-      document.getElementById('orb').style.transform = 'scale(0.82)';
-      document.getElementById('play-btn').textContent = 'Mula Sesi';
-      document.getElementById('script-text').textContent = MODES[st.mode].scripts[0];
-    }
-
-    function toggleSession() {
-      if (st.running) {
-        clearInterval(st.timer);
-        if ('speechSynthesis' in window) speechSynthesis.cancel();
-        st.running = false; document.getElementById('play-btn').textContent = 'Sambung'; return;
-      }
-      st.running = true; document.getElementById('play-btn').textContent = 'Jeda';
-      applyPhase(); speakLine(MODES[st.mode].scripts[0]);
-      st.timer = setInterval(tick, 1000);
-    }
-
-    function applyPhase() {
-      const p = MODES[st.mode].phases[st.pIdx];
-      document.getElementById('orb-phase').textContent = p.label;
-      document.getElementById('orb-sec').textContent = st.pSec;
-      document.getElementById('dimmer-phase').textContent = `${p.label} (${st.pSec})`;
-      const orb = document.getElementById('orb');
-      orb.style.transition = `transform ${p.sec}s ease-in-out`;
-      orb.style.transform = `scale(${p.scale})`;
-      if (document.getElementById('haptic-on').checked && navigator.vibrate && p.vib) navigator.vibrate(p.vib);
-      playSoftChime(p.label === 'Tarik' ? 396 : p.label === 'Hembus' ? 285 : 330);
-    }
-
-    function tick() {
-      st.remSec--; st.pSec--;
-      document.getElementById('clock').textContent = fmt(Math.max(0, st.remSec));
-      if (st.remSec <= 0) {
-        clearInterval(st.timer); st.running = false; toggleDimmer(false);
-        if (st.activeDay && !st.doneDays.includes(st.activeDay)) {
-          st.doneDays.push(st.activeDay);
-          localStorage.setItem('tj2_days', JSON.stringify(st.doneDays));
-          renderProgram();
-        }
-        playSoftChime(528); toast('Tahniah! Sesi selesai 🌙'); resetSession(); return;
-      }
-      if (st.pSec <= 0) {
-        const phases = MODES[st.mode].phases;
-        st.pIdx = (st.pIdx + 1) % phases.length;
-        st.pSec = phases[st.pIdx].sec;
-        applyPhase();
-        if (st.pIdx === 0) {
-          const list = MODES[st.mode].scripts;
-          st.sIdx = (st.sIdx + 1) % list.length;
-          document.getElementById('script-text').textContent = list[st.sIdx];
-          speakLine(list[st.sIdx]);
-        }
-      } else {
-        document.getElementById('orb-sec').textContent = st.pSec;
-        document.getElementById('dimmer-phase').textContent = `${MODES[st.mode].phases[st.pIdx].label} (${st.pSec})`;
-      }
-    }
-
-    function speakLine(text) {
-      if (!document.getElementById('voice-on').checked || !('speechSynthesis' in window)) return;
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'ms-MY'; u.rate = 0.84; u.pitch = 0.92;
-      speechSynthesis.speak(u);
-    }
-
-    function toggleDimmer(show) { document.getElementById('dimmer').classList.toggle('show', show); }
-
-    let ctx = null; const sounds = {};
-    function getCtx() {
-      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-      if (ctx.state === 'suspended') ctx.resume();
-      return ctx;
-    }
-
-    function playSoftChime(freq) {
-      try {
-        const c = getCtx(); const osc = c.createOscillator(); const g = c.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(freq, c.currentTime);
-        g.gain.setValueAtTime(0.04, c.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.0008, c.currentTime + 1.1);
-        osc.connect(g); g.connect(c.destination); osc.start(); osc.stop(c.currentTime + 1.1);
-      } catch (e) {}
-    }
-
-    function makeBrownNoise(c) {
-      const len = c.sampleRate * 3; const buf = c.createBuffer(1, len, c.sampleRate);
-      const d = buf.getChannelData(0); let last = 0;
-      for (let i = 0; i < len; i++) {
-        const w = Math.random() * 2 - 1;
-        d[i] = (last + 0.025 * w) / 1.025; last = d[i]; d[i] *= 2.8;
-      }
-      const src = c.createBufferSource(); src.buffer = buf; src.loop = true; return src;
-    }
-
-    function toggleSound(type) {
-      if (type === 'binaural' && !st.isPro) { toast('Audio Binaural khas untuk Pro 🔒'); goTab('program'); return; }
-      const btn = document.getElementById('btn-' + type);
-      if (sounds[type]) { sounds[type].stop(); delete sounds[type]; btn.textContent = 'Mati'; btn.classList.remove('on'); return; }
-      const c = getCtx(); const master = c.createGain();
-      master.gain.value = parseFloat(document.getElementById('vol-' + type).value) * 0.25;
-      master.connect(c.destination);
-
-      if (type === 'rain') {
-        const src = makeBrownNoise(c); const f = c.createBiquadFilter();
-        f.type = 'bandpass'; f.frequency.value = 650; f.Q.value = 0.4;
-        src.connect(f); f.connect(master); src.start();
-        sounds[type] = { gain: master, stop: () => src.stop() };
-      } else if (type === 'waves') {
-        const src = makeBrownNoise(c); const f = c.createBiquadFilter();
-        f.type = 'lowpass'; f.frequency.value = 340;
-        const lfo = c.createOscillator(); const lfoG = c.createGain();
-        lfo.frequency.value = 0.12; lfoG.gain.value = 0.14;
-        lfo.connect(lfoG); lfoG.connect(master.gain);
-        src.connect(f); f.connect(master); src.start(); lfo.start();
-        sounds[type] = { gain: master, stop: () => { src.stop(); lfo.stop(); } };
-      } else if (type === 'binaural') {
-        const merger = c.createChannelMerger(2);
-        const oL = c.createOscillator(); const oR = c.createOscillator();
-        oL.frequency.value = 180; oR.frequency.value = 184;
-        oL.connect(merger, 0, 0); oR.connect(merger, 0, 1); merger.connect(master);
-        oL.start(); oR.start();
-        sounds[type] = { gain: master, stop: () => { oL.stop(); oR.stop(); } };
-      }
-      btn.textContent = 'Aktif'; btn.classList.add('on');
-    }
-
-    function setVol(type, v) { if (sounds[type]) sounds[type].gain.gain.value = parseFloat(v) * 0.25; }
-
-    function stopAllSounds() { Object.keys(sounds).forEach(k => toggleSound(k)); setSleepTimer(0); toast('Semua bunyi dihentikan'); }
-
-    function setSleepTimer(min) {
-      clearInterval(st.sleepTimerId);
-      const lbl = document.getElementById('sleep-timer-label');
-      if (min === 0) { lbl.textContent = 'Tiada'; return; }
-      st.sleepSecLeft = min * 60; lbl.textContent = fmt(st.sleepSecLeft);
-      toast(`Bunyi akan berhenti automatik dalam ${min} minit`);
-      st.sleepTimerId = setInterval(() => {
-        st.sleepSecLeft--; lbl.textContent = fmt(Math.max(0, st.sleepSecLeft));
-        if (st.sleepSecLeft <= 0) { clearInterval(st.sleepTimerId); Object.keys(sounds).forEach(k => toggleSound(k)); lbl.textContent = 'Selesai'; }
-      }, 1000);
-    }
-
-    function renderProgram() {
-      document.getElementById('home-prog').textContent = `${st.doneDays.length} / 7 Hari Selesai`;
-      document.getElementById('program-list').innerHTML = PROGRAM.map(p => {
-        const unlocked = p.free || st.isPro;
-        const done = st.doneDays.includes(p.day);
-        return `
-          <div class="day-card ${unlocked ? '' : 'locked'} ${done ? 'done' : ''}" onclick="openDay(${p.day})">
-            <div class="day-num">${done ? '✓' : 'H' + p.day}</div>
-            <div class="day-info"><h4>${p.title}</h4><p>${p.desc}</p></div>
-            <div class="day-status">${done ? 'Selesai' : unlocked ? p.min + ' Min ▶' : '🔒 Pro'}</div>
-          </div>`;
-      }).join('');
-    }
-
-    function openDay(day) {
-      const p = PROGRAM.find(x => x.day === day);
-      if (!p.free && !st.isPro) { toast('Buka TenangJiwa Pro untuk akses Hari 2–7 🔒'); return; }
-      st.activeDay = day; launchSession(p.mode, p.min);
-    }
-
-    function redeemPro() {
-      const code = document.getElementById('promo-code').value.trim().toUpperCase();
-      const msg = document.getElementById('pro-msg');
-      if (code === 'TENANGPRO') {
-        st.isPro = true; localStorage.setItem('tj2_pro', 'true');
-        updateProUI(); renderProgram();
-        msg.style.color = 'var(--teal)'; msg.textContent = 'Berjaya! Semua 7 Hari & Audio Binaural telah dibuka.';
-        toast('TenangJiwa Pro Aktif ⭐');
-      } else {
-        msg.style.color = 'var(--rose)'; msg.textContent = 'Kod tidak sah.';
-      }
-    }
-
-    function updateProUI() {
-      const b = document.getElementById('pro-badge');
-      b.textContent = st.isPro ? 'PRO ⭐' : 'PERCUMA';
-      b.classList.toggle('active', st.isPro);
-    }
-
-    init();
-  </script>
+  let sleepInterval = null;
+  function setSleepTimer(mins, btn) {
+    document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+    clearInterval(sleepInterval);
+    if (mins === 0) { document.getElementById('sleepCountdown').innerText = 'Tiada'; return; }
+    let sec = mins * 60;
+    sleepInterval = setInterval(() => {
+      sec--;
+      document.getElementById('sleepCountdown').innerText = `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
+      if (sec <= 0) { clearInterval(sleepInterval); document.getElementById('volNoise').value = 0; document.getElementById('volTone').value = 0; if (audioCtx) updateAudio(); document.getElementById('sleepCountdown').innerText = 'Tamat'; }
+    }, 1000);
+  }
+</script>
 </body>
 </html>
