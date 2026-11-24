@@ -3,1229 +3,669 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#0f172a" />
+  <meta name="theme-color" content="#060b14" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>TenangJiwa — Mindfulness PWA</title>
-  <link id="pwa-manifest" rel="manifest" href="" />
+  <title>TenangJiwa — Reda Overthinking & Tidur Lena</title>
   <style>
     :root {
-      --bg-main: #0b1320;
-      --bg-card: #132033;
-      --bg-card-soft: rgba(255, 255, 255, 0.04);
+      --bg: #060b14;
+      --surface: #0f172a;
+      --surface-2: rgba(255, 255, 255, 0.04);
       --border: rgba(148, 163, 184, 0.14);
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --accent: #38bdf8;
-      --accent-calm: #2dd4bf;
-      --accent-sleep: #818cf8;
-      --accent-focus: #fbbf24;
-      --danger: #f87171;
-      --success: #34d399;
-      --radius: 18px;
-      --nav-height: 68px;
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --teal: #2dd4bf;
+      --indigo: #818cf8;
+      --amber: #fbbf24;
+      --rose: #fb7185;
+      --radius: 20px;
+      --nav-h: 68px;
+      --safe-b: env(safe-area-inset-bottom, 0px);
     }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html, body {
-      height: 100%;
-      background: radial-gradient(circle at top, #15253d 0%, var(--bg-main) 65%);
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+      min-height: 100%;
+      background: radial-gradient(circle at 50% -10%, #132340 0%, var(--bg) 55%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       line-height: 1.5;
       overflow-x: hidden;
     }
-
-    .app-shell {
-      max-width: 480px;
-      margin: 0 auto;
-      min-height: 100vh;
-      padding: 18px 16px calc(var(--nav-height) + var(--safe-bottom) + 24px);
-      display: flex;
-      flex-direction: column;
+    .app { max-width: 480px; margin: 0 auto; padding: 18px 16px calc(var(--nav-h) + var(--safe-b) + 28px); }
+    .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .logo {
+      width: 38px; height: 38px; border-radius: 13px;
+      background: linear-gradient(135deg, var(--teal), var(--indigo));
+      display: grid; place-items: center; font-size: 19px;
+      box-shadow: 0 6px 20px rgba(45, 212, 191, 0.25);
     }
-
-    /* Header */
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
+    .brand h1 { font-size: 1.05rem; font-weight: 700; }
+    .brand p { font-size: 0.74rem; color: var(--muted); }
+    .pro-badge {
+      font-size: 0.72rem; font-weight: 700; padding: 6px 12px;
+      border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--muted); cursor: pointer;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .pro-badge.active { background: rgba(45, 212, 191, 0.16); color: var(--teal); border-color: rgba(45, 212, 191, 0.45); }
+    .screen { display: none; animation: fadeUp 0.28s ease; }
+    .screen.active { display: block; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    h2.title { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
+    p.sub { font-size: 0.84rem; color: var(--muted); margin-bottom: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 14px; }
+    .sos-card {
+      background: linear-gradient(135deg, rgba(251, 113, 133, 0.18), rgba(129, 140, 248, 0.16));
+      border: 1px solid rgba(251, 113, 133, 0.35); border-radius: var(--radius);
+      padding: 18px; margin-bottom: 14px; display: flex; align-items: center;
+      justify-content: space-between; gap: 12px; cursor: pointer; transition: transform 0.15s;
     }
-
-    .brand-dot {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent-calm), var(--accent-sleep));
-      display: grid;
-      place-items: center;
-      font-size: 18px;
-      box-shadow: 0 6px 18px rgba(45, 212, 191, 0.25);
+    .sos-card:active { transform: scale(0.98); }
+    .sos-tag {
+      display: inline-block; font-size: 0.68rem; font-weight: 800; color: var(--rose);
+      background: rgba(251, 113, 133, 0.15); padding: 3px 8px; border-radius: 6px; margin-bottom: 6px;
     }
-
-    .brand h1 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.2px;
+    .sos-card h3 { font-size: 1.05rem; margin-bottom: 3px; }
+    .sos-card p { font-size: 0.8rem; color: #cbd5e1; }
+    .sos-play {
+      width: 48px; height: 48px; border-radius: 50%; flex-shrink: 0; background: var(--rose);
+      color: #060b14; border: none; font-size: 1.15rem; font-weight: 800;
+      display: grid; place-items: center; box-shadow: 0 0 24px rgba(251, 113, 133, 0.4);
     }
-
-    .brand p {
-      font-size: 0.74rem;
-      color: var(--text-muted);
+    textarea, .input {
+      width: 100%; background: rgba(6, 11, 20, 0.8); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px; color: var(--text); font-family: inherit;
+      font-size: 0.9rem; outline: none; resize: none;
+      transition: opacity 1.1s ease, transform 1.1s ease, filter 1.1s ease;
     }
-
-    .pro-pill {
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 5px 11px;
-      border-radius: 999px;
-      background: rgba(148, 163, 184, 0.14);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      cursor: pointer;
+    textarea:focus, .input:focus { border-color: var(--teal); }
+    textarea.dissolving { opacity: 0; transform: translateY(-28px) scale(0.94); filter: blur(8px); }
+    .btn { padding: 13px 16px; border-radius: 14px; border: none; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: linear-gradient(135deg, var(--teal), #0ea5e9); color: #06111c; }
+    .btn-secondary { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+    .btn-full { width: 100%; }
+    .btn-row { display: flex; gap: 10px; }
+    .btn-row .btn { flex: 1; }
+    .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .q-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 14px; cursor: pointer; text-align: left; color: var(--text);
     }
-
-    .pro-pill.active {
-      background: rgba(52, 211, 153, 0.16);
-      color: var(--success);
-      border-color: rgba(52, 211, 153, 0.4);
-    }
-
-    /* Screens */
-    .screen {
-      display: none;
-      animation: fadeIn 0.25s ease;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Cards & Typography */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .section-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .section-sub {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    /* Quick Entry Mode Cards */
-    .mode-card {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px;
-      border-radius: var(--radius);
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      margin-bottom: 12px;
-      cursor: pointer;
-      transition: transform 0.15s ease, border-color 0.2s ease;
-      text-align: left;
-      width: 100%;
-      color: var(--text-main);
-    }
-
-    .mode-card:active {
-      transform: scale(0.98);
-    }
-
-    .mode-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      font-size: 22px;
-      flex-shrink: 0;
-    }
-
-    .mode-calm .mode-icon { background: rgba(45, 212, 191, 0.15); color: var(--accent-calm); }
-    .mode-sleep .mode-icon { background: rgba(129, 140, 248, 0.15); color: var(--accent-sleep); }
-    .mode-focus .mode-icon { background: rgba(251, 191, 36, 0.15); color: var(--accent-focus); }
-
-    .mode-info h3 {
-      font-size: 1rem;
-      margin-bottom: 2px;
-    }
-
-    .mode-info p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .mode-badge {
-      margin-left: auto;
-      font-size: 0.72rem;
-      padding: 4px 8px;
-      border-radius: 8px;
-      background: var(--bg-card-soft);
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    .stat-box {
-      background: var(--bg-card-soft);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 8px;
-      text-align: center;
-    }
-
-    .stat-val {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--accent-calm);
-    }
-
-    .stat-lbl {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* Pills & Chips */
-    .pill-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
+    .q-card .ic { font-size: 1.5rem; margin-bottom: 6px; display: block; }
+    .q-card h4 { font-size: 0.92rem; margin-bottom: 2px; }
+    .q-card p { font-size: 0.74rem; color: var(--muted); }
+    .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
     .pill {
-      padding: 7px 13px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--bg-card-soft);
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
+      padding: 7px 13px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--muted); font-size: 0.78rem; font-weight: 600; cursor: pointer;
     }
-
-    .pill.active {
-      background: rgba(45, 212, 191, 0.18);
-      color: var(--accent-calm);
-      border-color: rgba(45, 212, 191, 0.5);
+    .pill.active { background: rgba(45, 212, 191, 0.18); color: var(--teal); border-color: rgba(45, 212, 191, 0.5); }
+    .stage { display: flex; flex-direction: column; align-items: center; padding: 20px 0 14px; }
+    .ring {
+      width: 210px; height: 210px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(45, 212, 191, 0.2) 0%, transparent 72%);
+      border: 1.5px solid rgba(45, 212, 191, 0.3); display: grid; place-items: center;
     }
-
-    /* Breathing Visualizer */
-    .breath-stage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 0 18px;
-      position: relative;
+    .orb {
+      width: 115px; height: 115px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), var(--indigo));
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: 0 0 40px rgba(45, 212, 191, 0.35); transform: scale(0.82);
     }
-
-    .breath-ring {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(45, 212, 191, 0.25) 0%, rgba(45, 212, 191, 0.04) 70%);
-      border: 2px solid rgba(45, 212, 191, 0.35);
-      display: grid;
-      place-items: center;
-      position: relative;
-    }
-
-    .breath-orb {
-      width: 118px;
-      height: 118px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-calm), var(--accent-sleep));
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 36px rgba(45, 212, 191, 0.32);
-      transform: scale(0.85);
-      transition: transform 1s ease-in-out, box-shadow 1s ease-in-out;
-    }
-
-    .breath-phase {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: #08121f;
-      text-align: center;
-    }
-
-    .breath-sec {
-      font-size: 1.55rem;
-      font-weight: 800;
-      color: #08121f;
-      line-height: 1.1;
-    }
-
-    .session-timer {
-      margin-top: 14px;
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* Guided Script */
+    .orb-phase { font-size: 0.88rem; font-weight: 800; color: #05101a; }
+    .orb-sec { font-size: 1.65rem; font-weight: 900; color: #05101a; line-height: 1.1; }
+    .clock { margin-top: 12px; font-size: 0.9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
     .script-box {
-      background: rgba(15, 23, 42, 0.65);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px;
-      margin: 12px 0 14px;
-      min-height: 82px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      background: rgba(6, 11, 20, 0.65); border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px; margin: 12px 0 14px; text-align: center; min-height: 76px;
+      display: grid; place-items: center; font-size: 0.9rem; color: #e2e8f0;
     }
-
-    .script-step {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--accent-calm);
-      margin-bottom: 4px;
+    .toggle-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.8rem; color: var(--muted); padding: 8px 0;
+      border-top: 1px solid var(--border); margin-top: 10px;
     }
-
-    .script-text {
-      font-size: 0.9rem;
-      color: var(--text-main);
+    .toggle-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .sound-row { padding: 13px 0; border-bottom: 1px solid var(--border); }
+    .sound-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .sound-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .sound-title { font-size: 0.92rem; font-weight: 600; }
+    .sound-desc { font-size: 0.72rem; color: var(--muted); }
+    .s-btn {
+      padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--muted); font-size: 0.76rem; font-weight: 700; cursor: pointer;
     }
-
-    /* Buttons */
-    .btn-row {
-      display: flex;
-      gap: 10px;
+    .s-btn.on { background: rgba(45, 212, 191, 0.2); color: var(--teal); border-color: var(--teal); }
+    input[type="range"] { width: 100%; accent-color: var(--teal); }
+    .day-card {
+      display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px;
+      background: var(--surface); border: 1px solid var(--border); margin-bottom: 10px; cursor: pointer;
     }
-
-    .btn {
-      flex: 1;
-      padding: 13px 16px;
-      border-radius: 14px;
-      border: none;
-      font-size: 0.92rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.15s ease, transform 0.12s ease;
+    .day-card.locked { opacity: 0.65; }
+    .day-num {
+      width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+      background: rgba(129, 140, 248, 0.16); color: var(--indigo);
+      display: grid; place-items: center; font-weight: 800; font-size: 0.85rem;
     }
-
-    .btn:active { transform: scale(0.98); }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-calm), #0ea5e9);
-      color: #07131f;
+    .day-card.done .day-num { background: rgba(45, 212, 191, 0.2); color: var(--teal); }
+    .day-info h4 { font-size: 0.92rem; margin-bottom: 2px; }
+    .day-info p { font-size: 0.76rem; color: var(--muted); }
+    .day-status { margin-left: auto; font-size: 0.75rem; font-weight: 700; color: var(--teal); }
+    .dimmer-overlay {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.94); z-index: 300;
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 24px;
     }
-
-    .btn-secondary {
-      background: var(--bg-card-soft);
-      color: var(--text-main);
-      border: 1px solid var(--border);
+    .dimmer-overlay.show { display: flex; }
+    .dimmer-overlay p { color: #334155; font-size: 0.85rem; margin-top: 12px; }
+    .dimmer-phase { font-size: 1.5rem; font-weight: 700; color: #1e293b; }
+    .nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: calc(var(--nav-h) + var(--safe-b)); padding-bottom: var(--safe-b);
+      background: rgba(6, 11, 20, 0.94); backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border); display: flex; justify-content: center; z-index: 100;
     }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--accent-calm);
-      border: 1px solid rgba(45, 212, 191, 0.45);
-    }
-
-    .btn-full {
-      width: 100%;
-    }
-
-    /* Sound Mixer */
-    .sound-item {
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .sound-item:last-child {
-      border-bottom: none;
-      padding-bottom: 2px;
-    }
-
-    .sound-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .sound-name {
-      font-size: 0.92rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .sound-toggle {
-      padding: 5px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--bg-card-soft);
-      color: var(--text-muted);
-      font-size: 0.76rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .sound-toggle.on {
-      background: rgba(45, 212, 191, 0.2);
-      color: var(--accent-calm);
-      border-color: rgba(45, 212, 191, 0.5);
-    }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent-calm);
-      height: 6px;
-      cursor: pointer;
-    }
-
-    /* Mood Check-In */
-    .mood-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .mood-btn {
-      background: var(--bg-card-soft);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 10px 4px;
-      text-align: center;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: all 0.15s ease;
-    }
-
-    .mood-btn span {
-      display: block;
-      font-size: 1.45rem;
-      margin-bottom: 3px;
-    }
-
-    .mood-btn small {
-      font-size: 0.66rem;
-      font-weight: 600;
-    }
-
-    .mood-btn.selected {
-      background: rgba(45, 212, 191, 0.16);
-      border-color: var(--accent-calm);
-      color: var(--text-main);
-      transform: translateY(-2px);
-    }
-
-    .input-field, textarea {
-      width: 100%;
-      background: rgba(11, 19, 32, 0.85);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px;
-      color: var(--text-main);
-      font-family: inherit;
-      font-size: 0.9rem;
-      margin-bottom: 12px;
-      outline: none;
-    }
-
-    .input-field:focus, textarea:focus {
-      border-color: var(--accent-calm);
-    }
-
-    .log-item {
-      background: var(--bg-card-soft);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-
-    .log-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-
-    .log-mood {
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-
-    .log-date {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-
-    .log-note {
-      font-size: 0.84rem;
-      color: #cbd5e1;
-      margin-top: 4px;
-    }
-
-    .log-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .log-tag {
-      font-size: 0.68rem;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.12);
-      color: var(--accent);
-    }
-
-    .del-btn {
-      background: none;
-      border: none;
-      color: var(--danger);
-      font-size: 0.75rem;
-      cursor: pointer;
-      margin-left: 8px;
-    }
-
-    /* Pro Unlock */
-    .pro-banner {
-      background: linear-gradient(135deg, rgba(45, 212, 191, 0.16), rgba(129, 140, 248, 0.18));
-      border: 1px solid rgba(45, 212, 191, 0.35);
-      border-radius: var(--radius);
-      padding: 18px;
-      margin-bottom: 14px;
-    }
-
-    .pro-list {
-      list-style: none;
-      margin: 12px 0;
-    }
-
-    .pro-list li {
-      font-size: 0.86rem;
-      margin-bottom: 7px;
-      color: #e2e8f0;
-    }
-
-    .pay-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px;
-      border-radius: 14px;
-      background: var(--bg-card-soft);
-      border: 1px solid var(--border);
-      margin-bottom: 10px;
-      text-decoration: none;
-      color: var(--text-main);
-    }
-
-    .pay-card small {
-      display: block;
-      color: var(--text-muted);
-      font-size: 0.76rem;
-    }
-
-    .pay-price {
-      font-weight: 800;
-      color: var(--accent-calm);
-      font-size: 0.95rem;
-    }
-
-    .status-msg {
-      font-size: 0.82rem;
-      margin-top: 8px;
-      min-height: 20px;
-    }
-
-    /* Bottom Nav */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: calc(var(--nav-height) + var(--safe-bottom));
-      padding-bottom: var(--safe-bottom);
-      background: rgba(11, 19, 32, 0.94);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: center;
-      z-index: 100;
-    }
-
-    .bottom-nav-inner {
-      width: 100%;
-      max-width: 480px;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-    }
-
+    .nav-inner { width: 100%; max-width: 480px; display: grid; grid-template-columns: repeat(4, 1fr); }
     .nav-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      font-size: 0.68rem;
-      font-weight: 600;
-      cursor: pointer;
+      background: none; border: none; color: var(--muted); display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px; font-size: 0.7rem; font-weight: 600; cursor: pointer;
     }
-
-    .nav-btn span {
-      font-size: 1.2rem;
-      line-height: 1;
-    }
-
-    .nav-btn.active {
-      color: var(--accent-calm);
-    }
-
+    .nav-btn span { font-size: 1.25rem; }
+    .nav-btn.active { color: var(--teal); }
     .toast {
-      position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-80px);
-      background: #1e293b;
-      color: var(--text-main);
-      border: 1px solid rgba(45, 212, 191, 0.45);
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      z-index: 200;
-      transition: transform 0.25s ease;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-      white-space: nowrap;
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-80px);
+      background: #1e293b; color: var(--text); border: 1px solid rgba(45, 212, 191, 0.45);
+      padding: 10px 18px; border-radius: 999px; font-size: 0.82rem; font-weight: 600;
+      z-index: 400; transition: transform 0.25s ease; white-space: nowrap;
     }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
   <div id="toast" class="toast">Tersimpan</div>
 
-  <div class="app-shell">
-    <!-- Top Header -->
+  <div id="dimmer" class="dimmer-overlay" onclick="toggleDimmer(false)">
+    <div id="dimmer-phase" class="dimmer-phase">Pejam mata & ikut getaran...</div>
+    <p>Ketik mana-mana skrin untuk cerahkan semula</p>
+  </div>
+
+  <div class="app">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-dot">🌿</div>
+        <div class="logo">🌙</div>
         <div>
           <h1>TenangJiwa</h1>
-          <p id="greeting-text">Selamat datang</p>
+          <p id="greeting">Selamat malam</p>
         </div>
       </div>
-      <button id="header-pro-badge" class="pro-pill" onclick="switchTab('pro')">PERCUMA</button>
+      <button id="pro-badge" class="pro-badge" onclick="goTab('program')">PERCUMA</button>
     </header>
 
-    <!-- SKRIN 1: QUICK ENTRY -->
-    <section id="screen-home" class="screen active">
-      <h2 class="section-title">Bagaimana perasaan anda sekarang?</h2>
-      <p class="section-sub">Pilih satu mod untuk terus memulakan sesi pernafasan dan ketenangan minda.</p>
-
-      <button class="mode-card mode-calm" onclick="quickStartMode('calm')">
-        <div class="mode-icon">🌊</div>
-        <div class="mode-info">
-          <h3>Tenang (Legakan Stres)</h3>
-          <p>Nafas 4-4-6 untuk meredakan degupan jantung & rasa cemas.</p>
+    <section id="tab-home" class="screen active">
+      <div class="sos-card" onclick="startSOS()">
+        <div>
+          <span class="sos-tag">SOS • 60 SAAT</span>
+          <h3>Otak Bising / Cemas?</h3>
+          <p>Tekan sini untuk redakan degupan jantung serta-merta dengan getaran nafas.</p>
         </div>
-        <span class="mode-badge">4-4-6</span>
-      </button>
-
-      <button class="mode-card mode-sleep" onclick="quickStartMode('sleep')">
-        <div class="mode-icon">🌙</div>
-        <div class="mode-info">
-          <h3>Tidur (Rehat Mendalam)</h3>
-          <p>Teknik 4-7-8 bagi membantu badan bersedia untuk lena.</p>
-        </div>
-        <span class="mode-badge">4-7-8</span>
-      </button>
-
-      <button class="mode-card mode-focus" onclick="quickStartMode('focus')">
-        <div class="mode-icon">✨</div>
-        <div class="mode-info">
-          <h3>Fokus (Minda Jelas)</h3>
-          <p>Nafas kotak 4-4-4-4 untuk menajamkan tumpuan kerja.</p>
-        </div>
-        <span class="mode-badge">4-4-4-4</span>
-      </button>
+        <button class="sos-play">▶</button>
+      </div>
 
       <div class="card">
-        <h3 style="font-size:0.95rem; margin-bottom:6px;">Ringkasan Hari Ini</h3>
-        <div class="stats-grid">
-          <div class="stat-box">
-            <div class="stat-val" id="stat-sessions">0</div>
-            <div class="stat-lbl">Sesi Selesai</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" id="stat-checkins">0</div>
-            <div class="stat-lbl">Rekod Mood</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-val" id="stat-last-mood">—</div>
-            <div class="stat-lbl">Mood Terkini</div>
-          </div>
+        <h3 style="font-size:0.98rem; margin-bottom:4px;">💨 Ritual Lepaskan Fikiran</h3>
+        <p style="font-size:0.78rem; color:var(--muted); margin-bottom:10px;">
+          Taip apa yang buat anda serabut malam ini. Ia tidak disimpan — ia akan lenyap terus.
+        </p>
+        <textarea id="dump-input" rows="3" placeholder="Contoh: Risau pasal kerja esok, takut tak sempat siap..."></textarea>
+        <button class="btn btn-primary btn-full" style="margin-top:10px;" onclick="releaseThought()">Lepaskan & Tenang</button>
+      </div>
+
+      <div class="quick-grid">
+        <button class="q-card" onclick="launchSession('sleep', 5)">
+          <span class="ic">😴</span>
+          <h4>Tidur 4-7-8</h4>
+          <p>Sedia untuk lena dalam 5 min</p>
+        </button>
+        <button class="q-card" onclick="goTab('sound')">
+          <span class="ic">🌧️</span>
+          <h4>Bunyi Malam</h4>
+          <p>Hujan, ombak & auto-off</p>
+        </button>
+      </div>
+
+      <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:0.76rem; color:var(--muted);">Kemajuan Program 7 Hari</div>
+          <div style="font-size:1.05rem; font-weight:700; color:var(--teal);" id="home-prog">0 / 7 Hari Selesai</div>
         </div>
+        <button class="btn btn-secondary" style="padding:9px 14px; font-size:0.8rem;" onclick="goTab('program')">Buka Program →</button>
       </div>
     </section>
 
-    <!-- SKRIN 2: SESSION PLAYER -->
-    <section id="screen-player" class="screen">
-      <h2 class="section-title">Sesi Pernafasan & Relaksasi</h2>
-      <p class="section-sub" id="player-mode-desc">Ikuti rentak bulatan dan skrip panduan di bawah.</p>
+    <section id="tab-session" class="screen">
+      <h2 class="title" id="session-title">Sesi Pernafasan</h2>
+      <p class="sub" id="session-desc">Genggam telefon, pejam mata dan ikut rentak getaran.</p>
 
-      <div class="pill-row" id="mode-pills">
-        <button class="pill active" data-mode="calm" onclick="selectMode('calm')">🌊 Tenang</button>
-        <button class="pill" data-mode="sleep" onclick="selectMode('sleep')">🌙 Tidur</button>
-        <button class="pill" data-mode="focus" onclick="selectMode('focus')">✨ Fokus</button>
-      </div>
-
-      <div class="pill-row" id="duration-pills">
-        <button class="pill active" data-min="1" onclick="selectDuration(1)">1 Min</button>
-        <button class="pill" data-min="3" onclick="selectDuration(3)">3 Min</button>
-        <button class="pill" data-min="5" onclick="selectDuration(5)">5 Min</button>
-        <button class="pill" data-min="10" onclick="selectDuration(10)">10 Min 🔒</button>
+      <div class="pills" id="mode-pills">
+        <button class="pill active" data-mode="sos" onclick="setMode('sos')">🚨 SOS 4-4-6</button>
+        <button class="pill" data-mode="sleep" onclick="setMode('sleep')">🌙 Tidur 4-7-8</button>
+        <button class="pill" data-mode="focus" onclick="setMode('focus')">✨ Fokus 4-4-4-4</button>
       </div>
 
       <div class="card">
-        <div class="breath-stage">
-          <div class="breath-ring">
-            <div id="breath-orb" class="breath-orb">
-              <div id="breath-phase" class="breath-phase">Sedia</div>
-              <div id="breath-sec" class="breath-sec">—</div>
+        <div class="stage">
+          <div class="ring">
+            <div id="orb" class="orb">
+              <div id="orb-phase" class="orb-phase">Sedia</div>
+              <div id="orb-sec" class="orb-sec">—</div>
             </div>
           </div>
-          <div class="session-timer">Baki masa: <strong id="session-clock">01:00</strong></div>
+          <div class="clock">Baki masa: <strong id="clock">01:00</strong></div>
         </div>
 
-        <div class="script-box">
-          <div class="script-step" id="script-step">Panduan Relaksasi</div>
-          <div class="script-text" id="script-text">Duduk atau baring dalam posisi selesa. Tekan Mula apabila anda sudah bersedia.</div>
+        <div class="script-box" id="script-text">
+          Duduk atau baring dengan selesa. Tekan Mula apabila bersedia.
         </div>
 
         <div class="btn-row">
-          <button id="btn-play-session" class="btn btn-primary" onclick="toggleSession()">Mula Sesi</button>
-          <button class="btn btn-secondary" onclick="resetSession()">Set Semula</button>
+          <button id="play-btn" class="btn btn-primary" onclick="toggleSession()">Mula Sesi</button>
+          <button class="btn btn-secondary" onclick="toggleDimmer(true)">🌑 Gelap Mata</button>
         </div>
 
-        <div style="margin-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; color:var(--text-muted);">
-          <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-            <input type="checkbox" id="chime-toggle" checked /> Bunyi loceng lembut setiap fasa
-          </label>
-          <button class="pill" style="padding:4px 10px;" onclick="nextScriptLine()">Skrip Seterusnya →</button>
+        <div class="toggle-row">
+          <label><input type="checkbox" id="haptic-on" checked /> Getaran (Pejam Mata)</label>
+          <label><input type="checkbox" id="voice-on" /> Panduan Suara BM</label>
         </div>
       </div>
     </section>
 
-    <!-- SKRIN 3: SOUND & FOCUS MIX -->
-    <section id="screen-sound" class="screen">
-      <h2 class="section-title">Sound & Focus Mix</h2>
-      <p class="section-sub">Audio dijana terus melalui Web Audio API (berfungsi walaupun tanpa internet).</p>
+    <section id="tab-sound" class="screen">
+      <h2 class="title">Bunyi Tidur & Fokus</h2>
+      <p class="sub">Gabungkan bunyi dan tetapkan pemasa tutup automatik sebelum tidur.</p>
 
       <div class="card">
-        <div class="sound-item">
-          <div class="sound-head">
-            <div class="sound-name">🌧️ Hujan Lembut</div>
-            <button id="toggle-rain" class="sound-toggle" onclick="toggleSound('rain')">Mati</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <span style="font-size:0.86rem; font-weight:700;">⏱️ Pemasa Tidur (Auto-Off)</span>
+          <span id="sleep-timer-label" style="font-size:0.8rem; color:var(--teal); font-weight:700;">Tiada</span>
+        </div>
+        <div class="pills" style="margin-bottom:0;">
+          <button class="pill" onclick="setSleepTimer(10)">10 Min</button>
+          <button class="pill" onclick="setSleepTimer(20)">20 Min</button>
+          <button class="pill" onclick="setSleepTimer(30)">30 Min</button>
+          <button class="pill" onclick="setSleepTimer(0)">Batal</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sound-row">
+          <div class="sound-top">
+            <div>
+              <div class="sound-title">🌧️ Hujan Malam Lembut</div>
+              <div class="sound-desc">Frekuensi hangat untuk tutup bunyi bising luar</div>
+            </div>
+            <button id="btn-rain" class="s-btn" onclick="toggleSound('rain')">Mati</button>
           </div>
-                    <input type="range" id="vol-rain" min="0" max="1" step="0.05" value="0.4" oninput="setVolume('rain', this.value)" />
+          <input type="range" id="vol-rain" min="0" max="1" step="0.05" value="0.45" oninput="setVol('rain', this.value)" />
         </div>
 
-        <div class="sound-item">
-          <div class="sound-head">
-            <div class="sound-name">🌊 Ombak / Angin Malam</div>
-            <button id="toggle-wind" class="sound-toggle" onclick="toggleSound('wind')">Mati</button>
+        <div class="sound-row">
+          <div class="sound-top">
+            <div>
+              <div class="sound-title">🌊 Alunan Ombak Perlahan</div>
+              <div class="sound-desc">Ombak beralun setiap 8 saat ikut rentak tidur</div>
+            </div>
+            <button id="btn-waves" class="s-btn" onclick="toggleSound('waves')">Mati</button>
           </div>
-          <input type="range" id="vol-wind" min="0" max="1" step="0.05" value="0.35" oninput="setVolume('wind', this.value)" />
+          <input type="range" id="vol-waves" min="0" max="1" step="0.05" value="0.5" oninput="setVol('waves', this.value)" />
         </div>
 
-        <div class="sound-item">
-          <div class="sound-head">
-            <div class="sound-name">✨ Fokus Drone (Pro 🔒)</div>
-            <button id="toggle-drone" class="sound-toggle" onclick="toggleSound('drone')">Mati</button>
+        <div class="sound-row">
+          <div class="sound-top">
+            <div>
+              <div class="sound-title">🎧 Gelombang Tidur Theta (Pro 🔒)</div>
+              <div class="sound-desc">Binaural 4Hz (Guna earphone untuk kesan mendalam)</div>
+            </div>
+            <button id="btn-binaural" class="s-btn" onclick="toggleSound('binaural')">Mati</button>
           </div>
-          <input type="range" id="vol-drone" min="0" max="1" step="0.05" value="0.25" oninput="setVolume('drone', this.value)" />
+          <input type="range" id="vol-binaural" min="0" max="1" step="0.05" value="0.3" oninput="setVol('binaural', this.value)" />
         </div>
       </div>
 
       <button class="btn btn-secondary btn-full" onclick="stopAllSounds()">Hentikan Semua Bunyi</button>
     </section>
 
-    <!-- SKRIN 4: CHECK-IN MOOD -->
-    <section id="screen-checkin" class="screen">
-      <h2 class="section-title">Rekod Mood Harian</h2>
-      <p class="section-sub">Catat perasaan anda untuk pantau perubahan emosi dari masa ke masa.</p>
+    <section id="tab-program" class="screen">
+      <h2 class="title">Program 7 Hari: Reset Tidur</h2>
+      <p class="sub">Latihan 3–5 minit setiap malam untuk hentikan tabiat overthinking.</p>
 
-      <div class="card">
-        <div class="mood-grid" id="mood-grid">
-          <button class="mood-btn" onclick="selectMood('Tenang', '😌', this)"><span>😌</span><small>Tenang</small></button>
-          <button class="mood-btn" onclick="selectMood('Gembira', '😊', this)"><span>😊</span><small>Gembira</small></button>
-          <button class="mood-btn" onclick="selectMood('Biasa', '😐', this)"><span>😐</span><small>Biasa</small></button>
-          <button class="mood-btn" onclick="selectMood('Stres', '😣', this)"><span>😣</span><small>Stres</small></button>
-          <button class="mood-btn" onclick="selectMood('Penat', '😴', this)"><span>😴</span><small>Penat</small></button>
+      <div id="program-list"></div>
+
+      <div class="card" style="margin-top:16px; border-color:rgba(45,212,191,0.35);">
+        <h3 style="font-size:1rem; margin-bottom:4px;">⭐ Buka Akses Penuh (TenangJiwa Pro)</h3>
+        <p style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;">
+          Bayar sekali seumur hidup (RM15) — buka Hari 2–7 Program Reset Tidur & Audio Binaural Theta.
+        </p>
+        <a href="https://toyyibpay.com" target="_blank" class="btn btn-primary btn-full" style="display:block; text-align:center; text-decoration:none; margin-bottom:12px;">
+          Dapatkan Kod Pro (RM15 Sekali Bayar)
+        </a>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="promo-code" class="input" placeholder="Masukkan kod (cth: TENANGPRO)" />
+          <button class="btn btn-secondary" onclick="redeemPro()">Buka</button>
         </div>
-        <textarea id="mood-note" rows="3" placeholder="Apa yang bermain di fikiran anda sekarang? (Pilihan)"></textarea>
-        <button class="btn btn-primary btn-full" onclick="saveCheckin()">Simpan Rekod Mood</button>
-      </div>
-
-      <h3 style="font-size:0.95rem; margin: 14px 0 8px;">Sejarah Rekod</h3>
-      <div id="checkin-list"></div>
-    </section>
-
-    <!-- SKRIN 5: PRO UNLOCK -->
-    <section id="screen-pro" class="screen">
-      <h2 class="section-title">TenangJiwa Pro</h2>
-      <p class="section-sub">Buka semua ciri premium untuk pengalaman ketenangan penuh.</p>
-
-      <div class="pro-banner">
-        <h3 style="font-size:1.05rem; margin-bottom:4px;">🌿 Naik Taraf ke Pro</h3>
-        <ul class="pro-list">
-          <li>✅ Sesi pernafasan panjang (10 minit)</li>
-          <li>✅ Audio Fokus Drone eksklusif</li>
-          <li>✅ Sokong pembangunan app tempatan</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3 style="font-size:0.95rem; margin-bottom:8px;">Ada Kod Promo?</h3>
-        <input type="text" id="promo-input" class="input-field" placeholder="Masukkan kod (cth: TENANGPRO)" />
-        <button class="btn btn-primary btn-full" onclick="redeemPromo()">Aktifkan Pro</button>
-        <div id="promo-status" class="status-msg"></div>
+        <div id="pro-msg" style="font-size:0.78rem; margin-top:8px;"></div>
       </div>
     </section>
   </div>
 
-  <!-- BOTTOM NAVIGATION -->
-  <nav class="bottom-nav">
-    <div class="bottom-nav-inner">
-      <button class="nav-btn active" data-tab="home" onclick="switchTab('home')"><span>🏠</span>Utama</button>
-      <button class="nav-btn" data-tab="player" onclick="switchTab('player')"><span>🫁</span>Sesi</button>
-      <button class="nav-btn" data-tab="sound" onclick="switchTab('sound')"><span>🎧</span>Bunyi</button>
-      <button class="nav-btn" data-tab="checkin" onclick="switchTab('checkin')"><span>📝</span>Mood</button>
-      <button class="nav-btn" data-tab="pro" onclick="switchTab('pro')"><span>⭐</span>Pro</button>
+  <nav class="nav">
+    <div class="nav-inner">
+      <button class="nav-btn active" data-tab="home" onclick="goTab('home')"><span>🏠</span>Utama</button>
+      <button class="nav-btn" data-tab="session" onclick="goTab('session')"><span>🫁</span>Sesi</button>
+      <button class="nav-btn" data-tab="sound" onclick="goTab('sound')"><span>🎧</span>Bunyi</button>
+      <button class="nav-btn" data-tab="program" onclick="goTab('program')"><span>🌙</span>7-Hari</button>
     </div>
   </nav>
-
-  <script>
-    // === STATE & STORAGE ===
-    const state = {
-      isPro: localStorage.getItem('tj_pro') === 'true',
-      sessions: parseInt(localStorage.getItem('tj_sessions') || '0', 10),
-      checkins: JSON.parse(localStorage.getItem('tj_checkins') || '[]'),
-      mode: 'calm',
-      durationMin: 1,
-      running: false,
-      remainingSec: 60,
-      phaseIdx: 0,
-      phaseSecLeft: 0,
-      timerId: null,
-      scriptIdx: 0,
-      selectedMood: null
-    };
+    <script>
+    const PROGRAM = [
+      { day: 1, title: 'Hari 1: Matikan Bunyi Bising Minda', desc: 'Teknik asas 4-4-6 untuk lepaskan penat hari ini.', mode: 'sos', min: 3, free: true },
+      { day: 2, title: 'Hari 2: Lepaskan Beban Kerja', desc: 'Scan badan dari bahu hingga kaki agar otot rehat.', mode: 'sos', min: 4, free: false },
+      { day: 3, title: 'Hari 3: Perlahankan Degupan Jantung', desc: 'Latihan 4-7-8 persediaan tidur mendalam.', mode: 'sleep', min: 4, free: false },
+      { day: 4, title: 'Hari 4: Urus Fikiran "Bagaimana Kalau..."', desc: 'Berdamai dengan perkara di luar kawalan anda.', mode: 'sleep', min: 5, free: false },
+      { day: 5, title: 'Hari 5: Tidur Tanpa Tengok Jam', desc: 'Rentak pernafasan panjang untuk tutup minda sedar.', mode: 'sleep', min: 5, free: false },
+      { day: 6, title: 'Hari 6: Fokus & Tenang Pagi', desc: 'Nafas kotak 4-4-4-4 untuk kawal emosi harian.', mode: 'focus', min: 4, free: false },
+      { day: 7, title: 'Hari 7: Ketenangan Sepenuhnya', desc: 'Gabungan teknik penuh untuk tidur lena setiap malam.', mode: 'sleep', min: 5, free: false }
+    ];
 
     const MODES = {
-      calm: {
-        desc: 'Nafas 4-4-6 untuk meredakan stres & degupan jantung.',
+      sos: {
+        title: 'Reda Overthinking (4-4-6)',
+        desc: 'Hembusan lebih panjang memberi isyarat selamat kepada saraf anda.',
         phases: [
-          { label: 'Tarik', sec: 4, scale: 1.25 },
-          { label: 'Tahan', sec: 4, scale: 1.25 },
-          { label: 'Hembus', sec: 6, scale: 0.8 }
+          { label: 'Tarik', sec: 4, scale: 1.28, vib: 60 },
+          { label: 'Tahan', sec: 4, scale: 1.28, vib: 0 },
+          { label: 'Hembus', sec: 6, scale: 0.78, vib: [40, 60, 40] }
         ],
         scripts: [
-          'Tarik nafas perlahan melalui hidung, rasakan udara memenuhi dada.',
-          'Lepaskan ketegangan di bahu dan rahang anda setiap kali menghembus.',
-          'Anda selamat di saat ini. Biarkan fikiran yang bising berlalu pergi.'
+          'Tarik nafas perlahan melalui hidung... rasakan perut mengembang.',
+          'Lepaskan bahu anda yang tegang. Anda selamat di saat ini.',
+          'Tidak perlu selesaikan masalah esok pada malam ini. Biarkan ia pergi.'
         ]
       },
       sleep: {
-        desc: 'Teknik 4-7-8 membantu badan bersedia untuk tidur lena.',
+        title: 'Tidur Lena (4-7-8)',
+        desc: 'Teknik penenang saraf semula jadi untuk bantu mata cepat terlelap.',
         phases: [
-          { label: 'Tarik', sec: 4, scale: 1.25 },
-          { label: 'Tahan', sec: 7, scale: 1.25 },
-          { label: 'Hembus', sec: 8, scale: 0.78 }
+          { label: 'Tarik', sec: 4, scale: 1.26, vib: 50 },
+          { label: 'Tahan', sec: 7, scale: 1.26, vib: 0 },
+          { label: 'Hembus', sec: 8, scale: 0.75, vib: [40, 80, 40] }
         ],
         scripts: [
-          'Pejamkan mata perlahan. Biarkan badan anda terasa berat di atas tilam.',
-          'Hembus nafas panjang dan lepaskan segala urusan hari ini.',
-          'Setiap hembusan membawa anda lebih dekat ke rehat yang mendalam.'
+          'Pejamkan mata. Rasakan tilam menampung seluruh berat badan anda.',
+          'Hembuskan nafas panjang dan perlahan... biarkan kelopak mata terasa berat.',
+          'Setiap hembusan membawa anda semakin dalam ke arah lena.'
         ]
       },
       focus: {
-        desc: 'Nafas kotak 4-4-4-4 untuk menajamkan tumpuan minda.',
+        title: 'Fokus Jelas (4-4-4-4)',
+        desc: 'Nafas kotak untuk menstabilkan emosi dan menajamkan tumpuan.',
         phases: [
-          { label: 'Tarik', sec: 4, scale: 1.22 },
-          { label: 'Tahan', sec: 4, scale: 1.22 },
-          { label: 'Hembus', sec: 4, scale: 0.82 },
-          { label: 'Tahan', sec: 4, scale: 0.82 }
+          { label: 'Tarik', sec: 4, scale: 1.24, vib: 50 },
+          { label: 'Tahan', sec: 4, scale: 1.24, vib: 0 },
+          { label: 'Hembus', sec: 4, scale: 0.82, vib: 50 },
+          { label: 'Tahan', sec: 4, scale: 0.82, vib: 0 }
         ],
         scripts: [
-          'Tegakkan duduk anda. Fokuskan perhatian hanya pada rentak nafas.',
-          'Kosongkan gangguan. Satu tugas pada satu masa dengan minda yang jelas.',
-          'Anda tenang, terkawal, dan bersedia untuk fokus.'
+          'Tegakkan duduk. Fokus hanya pada kiraan nafas anda sekarang.',
+          'Satu perkara pada satu masa. Minda anda tenang dan terkawal.',
+          'Tarik tenaga baharu, hembus keluar segala rasa serabut.'
         ]
       }
     };
 
-    // === INIT ===
+    const st = {
+      isPro: localStorage.getItem('tj2_pro') === 'true',
+      doneDays: JSON.parse(localStorage.getItem('tj2_days') || '[]'),
+      mode: 'sos', min: 1, activeDay: null, running: false,
+      remSec: 60, pIdx: 0, pSec: 4, sIdx: 0, timer: null,
+      sleepTimerId: null, sleepSecLeft: 0
+    };
+
     function init() {
-      const hour = new Date().getHours();
-      const greet = hour < 12 ? 'Selamat pagi' : hour < 18 ? 'Selamat petang' : 'Selamat malam';
-      document.getElementById('greeting-text').textContent = greet;
-      updateProUI();
-      updateStats();
-      renderCheckins();
-      resetSession();
+      const h = new Date().getHours();
+      document.getElementById('greeting').textContent =
+        h < 5 ? 'Masih berjaga? Jom tenang.' : h < 12 ? 'Selamat pagi' : h < 18 ? 'Selamat petang' : 'Selamat malam';
+      updateProUI(); renderProgram(); resetSession();
     }
 
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2200);
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg; el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2300);
     }
 
-    // === NAVIGATION ===
-    function switchTab(tab) {
+    function goTab(name) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('screen-' + tab).classList.add('active');
-      document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.tab === tab);
-      });
+      document.getElementById('tab-' + name).classList.add('active');
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
       window.scrollTo(0, 0);
     }
 
-    function quickStartMode(mode) {
-      selectMode(mode);
-      switchTab('player');
+    function releaseThought() {
+      const ta = document.getElementById('dump-input');
+      if (!ta.value.trim()) { toast('Taip dahulu apa yang mengganggu anda'); return; }
+      playSoftChime(432);
+      if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
+      ta.classList.add('dissolving');
+      setTimeout(() => { ta.value = ''; ta.classList.remove('dissolving'); toast('Fikiran dilepaskan. Tarik nafas dalam 🌿'); }, 1150);
     }
 
-    // === SESSION PLAYER ===
-    function selectMode(mode) {
-      state.mode = mode;
-      state.scriptIdx = 0;
-      document.querySelectorAll('#mode-pills .pill').forEach(p => {
-        p.classList.toggle('active', p.dataset.mode === mode);
-      });
-      document.getElementById('player-mode-desc').textContent = MODES[mode].desc;
+    function startSOS() { st.activeDay = null; launchSession('sos', 1); toggleSession(); }
+
+    function launchSession(mode, min) {
+      st.mode = mode; st.min = min;
+      document.querySelectorAll('#mode-pills .pill').forEach(p => p.classList.toggle('active', p.dataset.mode === mode));
+      resetSession(); goTab('session');
+    }
+
+    function setMode(mode) {
+      st.activeDay = null; st.mode = mode; st.min = mode === 'sos' ? 1 : 3;
+      document.querySelectorAll('#mode-pills .pill').forEach(p => p.classList.toggle('active', p.dataset.mode === mode));
       resetSession();
     }
 
-    function selectDuration(min) {
-      if (min === 10 && !state.isPro) {
-        showToast('Sesi 10 minit khas untuk Pro 🔒');
-        switchTab('pro');
-        return;
-      }
-      state.durationMin = min;
-      document.querySelectorAll('#duration-pills .pill').forEach(p => {
-        p.classList.toggle('active', parseInt(p.dataset.min, 10) === min);
-      });
-      resetSession();
-    }
-
-    function formatTime(sec) {
-      const m = String(Math.floor(sec / 60)).padStart(2, '0');
-      const s = String(sec % 60).padStart(2, '0');
-      return `${m}:${s}`;
-    }
+    function fmt(s) { return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; }
 
     function resetSession() {
-      clearInterval(state.timerId);
-      state.running = false;
-      state.remainingSec = state.durationMin * 60;
-      state.phaseIdx = 0;
-      state.phaseSecLeft = MODES[state.mode].phases[0].sec;
-      document.getElementById('session-clock').textContent = formatTime(state.remainingSec);
-      document.getElementById('breath-phase').textContent = 'Sedia';
-      document.getElementById('breath-sec').textContent = '—';
-      document.getElementById('breath-orb').style.transform = 'scale(0.85)';
-      document.getElementById('btn-play-session').textContent = 'Mula Sesi';
-      document.getElementById('script-text').textContent = MODES[state.mode].scripts[state.scriptIdx];
+      clearInterval(st.timer);
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      st.running = false; st.remSec = st.min * 60; st.pIdx = 0; st.sIdx = 0;
+      st.pSec = MODES[st.mode].phases[0].sec;
+      document.getElementById('session-title').textContent = st.activeDay ? PROGRAM[st.activeDay - 1].title : MODES[st.mode].title;
+      document.getElementById('session-desc').textContent = MODES[st.mode].desc;
+      document.getElementById('clock').textContent = fmt(st.remSec);
+      document.getElementById('orb-phase').textContent = 'Sedia';
+      document.getElementById('orb-sec').textContent = '—';
+      document.getElementById('orb').style.transform = 'scale(0.82)';
+      document.getElementById('play-btn').textContent = 'Mula Sesi';
+      document.getElementById('script-text').textContent = MODES[st.mode].scripts[0];
     }
 
     function toggleSession() {
-      if (state.running) {
-        clearInterval(state.timerId);
-        state.running = false;
-        document.getElementById('btn-play-session').textContent = 'Sambung';
-        return;
+      if (st.running) {
+        clearInterval(st.timer);
+        if ('speechSynthesis' in window) speechSynthesis.cancel();
+        st.running = false; document.getElementById('play-btn').textContent = 'Sambung'; return;
       }
-      state.running = true;
-      document.getElementById('btn-play-session').textContent = 'Jeda';
-      applyPhaseUI();
-      state.timerId = setInterval(tickSession, 1000);
+      st.running = true; document.getElementById('play-btn').textContent = 'Jeda';
+      applyPhase(); speakLine(MODES[st.mode].scripts[0]);
+      st.timer = setInterval(tick, 1000);
     }
 
-    function applyPhaseUI() {
-      const phase = MODES[state.mode].phases[state.phaseIdx];
-      document.getElementById('breath-phase').textContent = phase.label;
-      document.getElementById('breath-sec').textContent = state.phaseSecLeft;
-      const orb = document.getElementById('breath-orb');
-      orb.style.transition = `transform ${phase.sec}s ease-in-out`;
-      orb.style.transform = `scale(${phase.scale})`;
-      if (document.getElementById('chime-toggle').checked) playChime();
+    function applyPhase() {
+      const p = MODES[st.mode].phases[st.pIdx];
+      document.getElementById('orb-phase').textContent = p.label;
+      document.getElementById('orb-sec').textContent = st.pSec;
+      document.getElementById('dimmer-phase').textContent = `${p.label} (${st.pSec})`;
+      const orb = document.getElementById('orb');
+      orb.style.transition = `transform ${p.sec}s ease-in-out`;
+      orb.style.transform = `scale(${p.scale})`;
+      if (document.getElementById('haptic-on').checked && navigator.vibrate && p.vib) navigator.vibrate(p.vib);
+      playSoftChime(p.label === 'Tarik' ? 396 : p.label === 'Hembus' ? 285 : 330);
     }
 
-    function tickSession() {
-      state.remainingSec--;
-      state.phaseSecLeft--;
-      document.getElementById('session-clock').textContent = formatTime(Math.max(0, state.remainingSec));
-
-      if (state.remainingSec <= 0) {
-        clearInterval(state.timerId);
-        state.running = false;
-        state.sessions++;
-        localStorage.setItem('tj_sessions', state.sessions);
-        updateStats();
-        showToast('Tahniah! Sesi selesai 🌿');
-        resetSession();
-        return;
+    function tick() {
+      st.remSec--; st.pSec--;
+      document.getElementById('clock').textContent = fmt(Math.max(0, st.remSec));
+      if (st.remSec <= 0) {
+        clearInterval(st.timer); st.running = false; toggleDimmer(false);
+        if (st.activeDay && !st.doneDays.includes(st.activeDay)) {
+          st.doneDays.push(st.activeDay);
+          localStorage.setItem('tj2_days', JSON.stringify(st.doneDays));
+          renderProgram();
+        }
+        playSoftChime(528); toast('Tahniah! Sesi selesai 🌙'); resetSession(); return;
       }
-
-      if (state.phaseSecLeft <= 0) {
-        const phases = MODES[state.mode].phases;
-        state.phaseIdx = (state.phaseIdx + 1) % phases.length;
-        state.phaseSecLeft = phases[state.phaseIdx].sec;
-        applyPhaseUI();
+      if (st.pSec <= 0) {
+        const phases = MODES[st.mode].phases;
+        st.pIdx = (st.pIdx + 1) % phases.length;
+        st.pSec = phases[st.pIdx].sec;
+        applyPhase();
+        if (st.pIdx === 0) {
+          const list = MODES[st.mode].scripts;
+          st.sIdx = (st.sIdx + 1) % list.length;
+          document.getElementById('script-text').textContent = list[st.sIdx];
+          speakLine(list[st.sIdx]);
+        }
       } else {
-        document.getElementById('breath-sec').textContent = state.phaseSecLeft;
+        document.getElementById('orb-sec').textContent = st.pSec;
+        document.getElementById('dimmer-phase').textContent = `${MODES[st.mode].phases[st.pIdx].label} (${st.pSec})`;
       }
     }
 
-    function nextScriptLine() {
-      const list = MODES[state.mode].scripts;
-      state.scriptIdx = (state.scriptIdx + 1) % list.length;
-      document.getElementById('script-text').textContent = list[state.scriptIdx];
+    function speakLine(text) {
+      if (!document.getElementById('voice-on').checked || !('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ms-MY'; u.rate = 0.84; u.pitch = 0.92;
+      speechSynthesis.speak(u);
     }
 
-    // === WEB AUDIO API (OFFLINE SOUNDS) ===
-    let audioCtx = null;
-    const activeSounds = {};
+    function toggleDimmer(show) { document.getElementById('dimmer').classList.toggle('show', show); }
 
-    function getAudioCtx() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      return audioCtx;
+    let ctx = null; const sounds = {};
+    function getCtx() {
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state === 'suspended') ctx.resume();
+      return ctx;
     }
 
-    function playChime() {
-      const ctx = getAudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(528, ctx.currentTime);
-      gain.gain.setValueAtTime(0.08, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.8);
+    function playSoftChime(freq) {
+      try {
+        const c = getCtx(); const osc = c.createOscillator(); const g = c.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(freq, c.currentTime);
+        g.gain.setValueAtTime(0.04, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.0008, c.currentTime + 1.1);
+        osc.connect(g); g.connect(c.destination); osc.start(); osc.stop(c.currentTime + 1.1);
+      } catch (e) {}
+    }
+
+    function makeBrownNoise(c) {
+      const len = c.sampleRate * 3; const buf = c.createBuffer(1, len, c.sampleRate);
+      const d = buf.getChannelData(0); let last = 0;
+      for (let i = 0; i < len; i++) {
+        const w = Math.random() * 2 - 1;
+        d[i] = (last + 0.025 * w) / 1.025; last = d[i]; d[i] *= 2.8;
+      }
+      const src = c.createBufferSource(); src.buffer = buf; src.loop = true; return src;
     }
 
     function toggleSound(type) {
-      if (type === 'drone' && !state.isPro) {
-        showToast('Fokus Drone khas untuk Pro 🔒');
-        switchTab('pro');
-        return;
+      if (type === 'binaural' && !st.isPro) { toast('Audio Binaural khas untuk Pro 🔒'); goTab('program'); return; }
+      const btn = document.getElementById('btn-' + type);
+      if (sounds[type]) { sounds[type].stop(); delete sounds[type]; btn.textContent = 'Mati'; btn.classList.remove('on'); return; }
+      const c = getCtx(); const master = c.createGain();
+      master.gain.value = parseFloat(document.getElementById('vol-' + type).value) * 0.25;
+      master.connect(c.destination);
+
+      if (type === 'rain') {
+        const src = makeBrownNoise(c); const f = c.createBiquadFilter();
+        f.type = 'bandpass'; f.frequency.value = 650; f.Q.value = 0.4;
+        src.connect(f); f.connect(master); src.start();
+        sounds[type] = { gain: master, stop: () => src.stop() };
+      } else if (type === 'waves') {
+        const src = makeBrownNoise(c); const f = c.createBiquadFilter();
+        f.type = 'lowpass'; f.frequency.value = 340;
+        const lfo = c.createOscillator(); const lfoG = c.createGain();
+        lfo.frequency.value = 0.12; lfoG.gain.value = 0.14;
+        lfo.connect(lfoG); lfoG.connect(master.gain);
+        src.connect(f); f.connect(master); src.start(); lfo.start();
+        sounds[type] = { gain: master, stop: () => { src.stop(); lfo.stop(); } };
+      } else if (type === 'binaural') {
+        const merger = c.createChannelMerger(2);
+        const oL = c.createOscillator(); const oR = c.createOscillator();
+        oL.frequency.value = 180; oR.frequency.value = 184;
+        oL.connect(merger, 0, 0); oR.connect(merger, 0, 1); merger.connect(master);
+        oL.start(); oR.start();
+        sounds[type] = { gain: master, stop: () => { oL.stop(); oR.stop(); } };
       }
-      const btn = document.getElementById('toggle-' + type);
-      if (activeSounds[type]) {
-        activeSounds[type].stop();
-        delete activeSounds[type];
-        btn.textContent = 'Mati';
-        btn.classList.remove('on');
-        return;
-      }
-
-      const ctx = getAudioCtx();
-      const gain = ctx.createGain();
-      const vol = parseFloat(document.getElementById('vol-' + type).value);
-      gain.gain.value = vol * 0.25;
-      gain.connect(ctx.destination);
-
-      let source;
-      if (type === 'drone') {
-        source = ctx.createOscillator();
-        source.type = 'sine';
-        source.frequency.value = 174;
-        source.connect(gain);
-        source.start();
-      } else {
-        const bufferSize = ctx.sampleRate * 2;
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        let lastOut = 0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          if (type === 'wind') {
-            data[i] = (lastOut + (0.02 * white)) / 1.02;
-            lastOut = data[i];
-            data[i] *= 3.5;
-          } else {
-            data[i] = white * 0.5;
-          }
-        }
-        source = ctx.createBufferSource();
-        source.buffer = buffer;
-        source.loop = true;
-
-        const filter = ctx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = type === 'rain' ? 1200 : 450;
-        source.connect(filter);
-        filter.connect(gain);
-        source.start();
-      }
-
-      activeSounds[type] = { source, gain, stop: () => { try { source.stop(); } catch (e) {} } };
-      btn.textContent = 'Aktif';
-      btn.classList.add('on');
+      btn.textContent = 'Aktif'; btn.classList.add('on');
     }
 
-    function setVolume(type, val) {
-      if (activeSounds[type]) activeSounds[type].gain.gain.value = parseFloat(val) * 0.25;
+    function setVol(type, v) { if (sounds[type]) sounds[type].gain.gain.value = parseFloat(v) * 0.25; }
+
+    function stopAllSounds() { Object.keys(sounds).forEach(k => toggleSound(k)); setSleepTimer(0); toast('Semua bunyi dihentikan'); }
+
+    function setSleepTimer(min) {
+      clearInterval(st.sleepTimerId);
+      const lbl = document.getElementById('sleep-timer-label');
+      if (min === 0) { lbl.textContent = 'Tiada'; return; }
+      st.sleepSecLeft = min * 60; lbl.textContent = fmt(st.sleepSecLeft);
+      toast(`Bunyi akan berhenti automatik dalam ${min} minit`);
+      st.sleepTimerId = setInterval(() => {
+        st.sleepSecLeft--; lbl.textContent = fmt(Math.max(0, st.sleepSecLeft));
+        if (st.sleepSecLeft <= 0) { clearInterval(st.sleepTimerId); Object.keys(sounds).forEach(k => toggleSound(k)); lbl.textContent = 'Selesai'; }
+      }, 1000);
     }
 
-    function stopAllSounds() {
-      Object.keys(activeSounds).forEach(k => toggleSound(k));
-      showToast('Semua bunyi dihentikan');
+    function renderProgram() {
+      document.getElementById('home-prog').textContent = `${st.doneDays.length} / 7 Hari Selesai`;
+      document.getElementById('program-list').innerHTML = PROGRAM.map(p => {
+        const unlocked = p.free || st.isPro;
+        const done = st.doneDays.includes(p.day);
+        return `
+          <div class="day-card ${unlocked ? '' : 'locked'} ${done ? 'done' : ''}" onclick="openDay(${p.day})">
+            <div class="day-num">${done ? '✓' : 'H' + p.day}</div>
+            <div class="day-info"><h4>${p.title}</h4><p>${p.desc}</p></div>
+            <div class="day-status">${done ? 'Selesai' : unlocked ? p.min + ' Min ▶' : '🔒 Pro'}</div>
+          </div>`;
+      }).join('');
     }
 
-    // === MOOD CHECK-IN ===
-    function selectMood(label, emoji, btn) {
-      state.selectedMood = { label, emoji };
-      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-      btn.classList.add('selected');
+    function openDay(day) {
+      const p = PROGRAM.find(x => x.day === day);
+      if (!p.free && !st.isPro) { toast('Buka TenangJiwa Pro untuk akses Hari 2–7 🔒'); return; }
+      st.activeDay = day; launchSession(p.mode, p.min);
     }
 
-    function saveCheckin() {
-      if (!state.selectedMood) {
-        showToast('Sila pilih mood dahulu');
-        return;
-      }
-      const note = document.getElementById('mood-note').value.trim();
-      const entry = {
-        id: Date.now(),
-        mood: state.selectedMood.label,
-        emoji: state.selectedMood.emoji,
-        note,
-        date: new Date().toLocaleString('ms-MY', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
-      };
-      state.checkins.unshift(entry);
-      localStorage.setItem('tj_checkins', JSON.stringify(state.checkins));
-      document.getElementById('mood-note').value = '';
-      document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-      state.selectedMood = null;
-      updateStats();
-      renderCheckins();
-      showToast('Rekod mood disimpan');
-    }
-
-    function deleteCheckin(id) {
-      state.checkins = state.checkins.filter(c => c.id !== id);
-      localStorage.setItem('tj_checkins', JSON.stringify(state.checkins));
-      updateStats();
-      renderCheckins();
-    }
-
-    function renderCheckins() {
-      const box = document.getElementById('checkin-list');
-      if (!state.checkins.length) {
-        box.innerHTML = '<p style="font-size:0.85rem; color:var(--text-muted);">Belum ada rekod mood lagi.</p>';
-        return;
-      }
-      box.innerHTML = state.checkins.map(c => `
-        <div class="log-item">
-          <div class="log-top">
-            <span class="log-mood">${c.emoji} ${c.mood}</span>
-            <span class="log-date">${c.date} <button class="del-btn" onclick="deleteCheckin(${c.id})">Padam</button></span>
-          </div>
-          ${c.note ? `<div class="log-note">${c.note}</div>` : ''}
-        </div>
-      `).join('');
-    }
-
-    function updateStats() {
-      document.getElementById('stat-sessions').textContent = state.sessions;
-      document.getElementById('stat-checkins').textContent = state.checkins.length;
-      document.getElementById('stat-last-mood').textContent = state.checkins.length ? state.checkins[0].emoji : '—';
-    }
-
-    // === PRO UNLOCK ===
-    function redeemPromo() {
-      const code = document.getElementById('promo-input').value.trim().toUpperCase();
-      const status = document.getElementById('promo-status');
+    function redeemPro() {
+      const code = document.getElementById('promo-code').value.trim().toUpperCase();
+      const msg = document.getElementById('pro-msg');
       if (code === 'TENANGPRO') {
-        state.isPro = true;
-        localStorage.setItem('tj_pro', 'true');
-        updateProUI();
-        status.style.color = 'var(--success)';
-        status.textContent = 'Berjaya! Semua ciri Pro telah dibuka.';
-        showToast('TenangJiwa Pro Aktif ⭐');
+        st.isPro = true; localStorage.setItem('tj2_pro', 'true');
+        updateProUI(); renderProgram();
+        msg.style.color = 'var(--teal)'; msg.textContent = 'Berjaya! Semua 7 Hari & Audio Binaural telah dibuka.';
+        toast('TenangJiwa Pro Aktif ⭐');
       } else {
-        status.style.color = 'var(--danger)';
-        status.textContent = 'Kod tidak sah. Cuba lagi.';
+        msg.style.color = 'var(--rose)'; msg.textContent = 'Kod tidak sah.';
       }
     }
 
     function updateProUI() {
-      const badge = document.getElementById('header-pro-badge');
-      if (state.isPro) {
-        badge.textContent = 'PRO ⭐';
-        badge.classList.add('active');
-      } else {
-        badge.textContent = 'PERCUMA';
-        badge.classList.remove('active');
-      }
+      const b = document.getElementById('pro-badge');
+      b.textContent = st.isPro ? 'PRO ⭐' : 'PERCUMA';
+      b.classList.toggle('active', st.isPro);
     }
 
     init();
