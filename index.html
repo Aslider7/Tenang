@@ -1,1806 +1,746 @@
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#38BDF8" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="PintarCilik" />
-  <title>PintarCilik — Belajar Sambil Bermain</title>
-
-  <!-- Inline SVG Favicon (Tiada fail luar diperlukan) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%2338BDF8'/%3E%3Ccircle cx='50' cy='50' r='36' fill='%23FDE047'/%3E%3Ctext x='50' y='64' font-size='44' text-anchor='middle'%3E🦁%3C/text%3E%3C/svg%3E" />
-
-  <!-- Font Mesra Kanak-Kanak -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet" />
-
-  <style>
-    :root {
-      --sky-top: #E0F2FE;
-      --sky-bottom: #DCFCE7;
-      --card-bg: #FFFFFF;
-      --text-main: #1E293B;
-      --text-soft: #475569;
-      --blue: #38BDF8;
-      --blue-dark: #0284C7;
-      --green: #4ADE80;
-      --green-dark: #16A34A;
-      --yellow: #FACC15;
-      --yellow-dark: #CA8A04;
-      --orange: #FB923C;
-      --orange-dark: #EA580C;
-      --pink: #F472B6;
-      --pink-dark: #DB2777;
-      --purple: #A78BFA;
-      --purple-dark: #7C3AED;
-      --red-syl: #EF4444;
-      --blue-syl: #2563EB;
-      --radius-lg: 26px;
-      --radius-md: 20px;
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100dvh;
-      font-family: 'Fredoka', 'Comic Sans MS', 'Trebuchet MS', sans-serif;
-      color: var(--text-main);
-      background: linear-gradient(180deg, var(--sky-top) 0%, #FEF9C3 52%, var(--sky-bottom) 100%);
-      background-attachment: fixed;
-      touch-action: manipulation;
-      overflow-x: hidden;
-    }
-
-    /* Hiasan Latar Belakang Rimba Ceria */
-    .bg-deco {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 0;
-    }
-    .cloud {
-      position: absolute;
-      font-size: 3.2rem;
-      opacity: 0.45;
-      animation: floatCloud 18s ease-in-out infinite;
-    }
-    .cloud.c1 { top: 6%; left: 5%; animation-delay: 0s; }
-    .cloud.c2 { top: 14%; right: 6%; font-size: 2.6rem; animation-delay: -6s; }
-    .cloud.c3 { bottom: 6%; left: 8%; font-size: 2.4rem; opacity: 0.35; animation-delay: -11s; }
-    .cloud.c4 { bottom: 8%; right: 8%; font-size: 2.6rem; opacity: 0.35; animation-delay: -3s; }
-
-    @keyframes floatCloud {
-      0%, 100% { transform: translateY(0px) translateX(0px); }
-      50% { transform: translateY(-10px) translateX(8px); }
-    }
-
-    /* Bekas Utama Aplikasi */
-    .app-shell {
-      position: relative;
-      z-index: 1;
-      max-width: 540px;
-      margin: 0 auto;
-      min-height: 100dvh;
-      padding: 14px 16px 28px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Bar Atas */
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .profile-pill {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #FFFFFF;
-      padding: 6px 14px 6px 8px;
-      border-radius: 999px;
-      box-shadow: 0 4px 0 #CBD5E1;
-      border: 2px solid #E2E8F0;
-      cursor: pointer;
-      transition: transform 0.1s;
-    }
-    .profile-pill:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 #CBD5E1;
-    }
-    .avatar-circle {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #FEF08A;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      border: 2px solid #FACC15;
-    }
-    .profile-meta {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-    .profile-name {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-    .star-badge {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #B45309;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      border: none;
-      background: #FFFFFF;
-      font-size: 1.45rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #CBD5E1;
-      border: 2px solid #E2E8F0;
-      transition: transform 0.1s, box-shadow 0.1s;
-    }
-    .icon-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 #CBD5E1;
-    }
-    .icon-btn.muted {
-      background: #FEE2E2;
-      border-color: #FCA5A5;
-      box-shadow: 0 4px 0 #F87171;
-    }
-
-    /* Skrin & Transisi */
-    .screen {
-      display: none;
-      flex-direction: column;
-      flex: 1;
-      animation: fadeIn 0.25s ease;
-    }
-    .screen.active {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Banner Utama */
-    .hero-card {
-      background: linear-gradient(135deg, #38BDF8 0%, #60A5FA 100%);
-      color: #FFFFFF;
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      box-shadow: 0 6px 0 var(--blue-dark);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-text h1 {
-      margin: 0 0 4px;
-      font-size: 1.55rem;
-      letter-spacing: 0.3px;
-      text-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
-    }
-    .hero-text p {
-      margin: 0;
-      font-size: 0.95rem;
-      opacity: 0.95;
-    }
-    .hero-mascot {
-      font-size: 3.4rem;
-      animation: bounceSlow 2.4s ease-in-out infinite;
-    }
-    @keyframes bounceSlow {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-7px); }
-    }
-
-    /* Grid 4 Modul Permainan */
-    .module-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-bottom: 18px;
-    }
-
-    .module-card {
-      position: relative;
-      border: none;
-      border-radius: var(--radius-lg);
-      padding: 18px 12px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      color: #FFFFFF;
-      transition: transform 0.12s, box-shadow 0.12s;
-      min-height: 158px;
-      justify-content: center;
-    }
-    .module-card:active {
-      transform: translateY(5px);
-    }
-
-    .mod-bm { background: linear-gradient(180deg, #FB923C, #F97316); box-shadow: 0 7px 0 var(--orange-dark); }
-    .mod-bm:active { box-shadow: 0 2px 0 var(--orange-dark); }
-
-    .mod-math { background: linear-gradient(180deg, #4ADE80, #22C55E); box-shadow: 0 7px 0 var(--green-dark); }
-    .mod-math:active { box-shadow: 0 2px 0 var(--green-dark); }
-
-    .mod-eng { background: linear-gradient(180deg, #F472B6, #EC4899); box-shadow: 0 7px 0 var(--pink-dark); }
-    .mod-eng:active { box-shadow: 0 2px 0 var(--pink-dark); }
-
-    .mod-hij { background: linear-gradient(180deg, #A78BFA, #8B5CF6); box-shadow: 0 7px 0 var(--purple-dark); }
-    .mod-hij:active { box-shadow: 0 2px 0 var(--purple-dark); }
-
-    .module-icon {
-      font-size: 3.1rem;
-      margin-bottom: 8px;
-      filter: drop-shadow(0 3px 0 rgba(0,0,0,0.12));
-    }
-    .module-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 4px;
-    }
-    .module-sub {
-      font-size: 0.82rem;
-      opacity: 0.95;
-      font-weight: 500;
-    }
-    .pro-pill {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #FEF08A;
-      color: #854D0E;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 999px;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.12);
-    }
-
-    /* Bar Kemajuan Stiker di Home */
-    .sticker-teaser {
-      background: #FFFFFF;
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      border: 3px solid #FDE047;
-      box-shadow: 0 5px 0 #EAB308;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      cursor: pointer;
-      margin-bottom: 14px;
-    }
-    .sticker-teaser:active {
-      transform: translateY(3px);
-      box-shadow: 0 2px 0 #EAB308;
-    }
-    .teaser-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .teaser-emoji { font-size: 2.2rem; }
-    .teaser-title { font-size: 1.05rem; font-weight: 700; color: var(--text-main); }
-    .teaser-sub { font-size: 0.85rem; color: var(--text-soft); }
-
-    .parent-footer-btn {
-      margin-top: auto;
-      background: rgba(255, 255, 255, 0.85);
-      border: 2px dashed #94A3B8;
-      color: #475569;
-      font-family: inherit;
-      font-size: 0.92rem;
-      font-weight: 600;
-      padding: 12px;
-      border-radius: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-        /* ================= SKRIN PERMAINAN ================= */
-    .game-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .progress-track {
-      flex: 1;
-      height: 18px;
-      background: #FFFFFF;
-      border-radius: 999px;
-      padding: 3px;
-      border: 2px solid #CBD5E1;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #FACC15, #4ADE80);
-      border-radius: 999px;
-      transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .session-count {
-      font-weight: 700;
-      font-size: 0.95rem;
-      background: #FFFFFF;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 2px solid #CBD5E1;
-    }
-
-    .question-stage {
-      background: #FFFFFF;
-      border-radius: var(--radius-lg);
-      padding: 22px 18px;
-      box-shadow: 0 8px 0 #CBD5E1;
-      border: 3px solid #E2E8F0;
-      text-align: center;
-      margin-bottom: 18px;
-      position: relative;
-    }
-
-    .q-instruction {
-      font-size: 1.05rem;
-      font-weight: 600;
-      color: var(--text-soft);
-      margin-bottom: 12px;
-    }
-
-    .q-visual {
-      font-size: 4.8rem;
-      line-height: 1.15;
-      margin: 8px 0 12px;
-      min-height: 92px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .q-visual.math-group {
-      font-size: 2.5rem;
-      line-height: 1.3;
-    }
-    .q-visual.hijaiyah-char {
-      font-family: 'Amiri', 'Traditional Arabic', serif;
-      font-size: 6.2rem;
-      color: #6D28D9;
-      background: #F5F3FF;
-      border-radius: 22px;
-      padding: 6px 26px;
-      display: inline-flex;
-      border: 3px solid #DDD6FE;
-    }
-
-    .math-equation {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      font-size: 2.1rem;
-      font-weight: 700;
-      color: #1E293B;
-    }
-    .math-box {
-      background: #F0FDF4;
-      border: 2px solid #86EFAC;
-      border-radius: 16px;
-      padding: 8px 12px;
-      display: inline-flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 4px;
-      max-width: 170px;
-    }
-
-    .syllable-prompt {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-size: 2.2rem;
-      font-weight: 700;
-      background: #FFF7ED;
-      border: 3px solid #FDBA74;
-      border-radius: 18px;
-      padding: 8px 20px;
-      margin-top: 6px;
-    }
-    .syl-red { color: var(--red-syl); }
-    .syl-blue { color: var(--blue-syl); }
-    .syl-blank {
-      display: inline-block;
-      min-width: 68px;
-      background: #FFFFFF;
-      border: 3px dashed #FB923C;
-      border-radius: 12px;
-      color: #EA580C;
-      padding: 0 10px;
-    }
-
-    .audio-repeat-btn {
-      margin-top: 12px;
-      background: #E0F2FE;
-      color: #0369A1;
-      border: 2px solid #7DD3FC;
-      box-shadow: 0 4px 0 #38BDF8;
-      border-radius: 999px;
-      padding: 10px 20px;
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .audio-repeat-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 #38BDF8;
-    }
-
-    .feedback-banner {
-      min-height: 36px;
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-    .feedback-banner.ok { color: #16A34A; }
-    .feedback-banner.try { color: #EA580C; }
-
-    /* Butang Pilihan Jawapan Besar (>= 76px) */
-    .options-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: auto;
-    }
-
-    .opt-btn {
-      min-height: 82px;
-      border-radius: 22px;
-      border: 3px solid #BAE6FD;
-      background: #FFFFFF;
-      color: var(--text-main);
-      font-family: inherit;
-      font-size: 1.65rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 7px 0 #7DD3FC;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 6px;
-      transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
-      word-break: break-word;
-    }
-    .opt-btn.opt-text-sm {
-      font-size: 1.3rem;
-    }
-    .opt-btn:active {
-      transform: translateY(5px);
-      box-shadow: 0 2px 0 #7DD3FC;
-    }
-    .opt-btn.correct {
-      background: #4ADE80;
-      border-color: #16A34A;
-      color: #FFFFFF;
-      box-shadow: 0 7px 0 #15803D;
-      animation: popWin 0.35s ease;
-    }
-    .opt-btn.wrong {
-      background: #FFEDD5;
-      border-color: #FB923C;
-      color: #C2410C;
-      box-shadow: 0 7px 0 #FDBA74;
-      animation: gentleShake 0.4s ease;
-    }
-
-    @keyframes popWin {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    @keyframes gentleShake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-7px); }
-      50% { transform: translateX(7px); }
-      75% { transform: translateX(-4px); }
-    }
-
-    /* ================= ALBUM STIKER ================= */
-    .section-card {
-      background: #FFFFFF;
-      border-radius: var(--radius-lg);
-      padding: 18px;
-      box-shadow: 0 6px 0 #CBD5E1;
-      border: 2px solid #E2E8F0;
-      margin-bottom: 16px;
-    }
-    .section-title {
-      margin: 0 0 6px;
-      font-size: 1.35rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .section-desc {
-      margin: 0 0 14px;
-      font-size: 0.92rem;
-      color: var(--text-soft);
-    }
-
-    .sticker-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-    .sticker-item {
-      background: #F8FAFC;
-      border: 3px solid #E2E8F0;
-      border-radius: 20px;
-      padding: 14px 10px;
-      text-align: center;
-      position: relative;
-    }
-    .sticker-item.unlocked {
-      background: #FEFCE8;
-      border-color: #FACC15;
-      box-shadow: 0 4px 0 #EAB308;
-    }
-    .sticker-item.locked .st-emoji {
-      filter: grayscale(1) opacity(0.3);
-    }
-    .st-emoji {
-      font-size: 3rem;
-      margin-bottom: 4px;
-    }
-    .st-name {
-      font-weight: 700;
-      font-size: 0.98rem;
-    }
-    .st-req {
-      font-size: 0.78rem;
-      color: var(--text-soft);
-      margin-top: 2px;
-    }
-
-    /* ================= BUTANG AKSI UMUM ================= */
-    .btn-primary {
-      width: 100%;
-      min-height: 58px;
-      border: none;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #4ADE80, #22C55E);
-      color: #FFFFFF;
-      font-family: inherit;
-      font-size: 1.15rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 6px 0 #16A34A;
-      margin-top: 10px;
-    }
-    .btn-primary:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 #16A34A;
-    }
-
-    .btn-secondary {
-      width: 100%;
-      min-height: 52px;
-      border: 2px solid #CBD5E1;
-      border-radius: 18px;
-      background: #FFFFFF;
-      color: var(--text-main);
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #CBD5E1;
-      margin-top: 10px;
-    }
-    .btn-secondary:active {
-      transform: translateY(3px);
-      box-shadow: 0 1px 0 #CBD5E1;
-    }
-
-    .btn-pro {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      width: 100%;
-      min-height: 56px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #FACC15, #EAB308);
-      color: #422006;
-      font-family: inherit;
-      font-size: 1.08rem;
-      font-weight: 700;
-      box-shadow: 0 6px 0 #CA8A04;
-      margin: 12px 0;
-    }
-    .btn-pro:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 #CA8A04;
-    }
-
-    .btn-danger {
-      width: 100%;
-      min-height: 48px;
-      border: 2px solid #FCA5A5;
-      border-radius: 16px;
-      background: #FEF2F2;
-      color: #B91C1C;
-      font-family: inherit;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 12px;
-    }
-
-    /* ================= MODAL ================= */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-      z-index: 50;
-      backdrop-filter: blur(3px);
-    }
-    .modal-backdrop.open {
-      display: flex;
-    }
-    .modal-box {
-      width: 100%;
-      max-width: 420px;
-      background: #FFFFFF;
-      border-radius: var(--radius-lg);
-      padding: 22px 20px;
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
-      text-align: center;
-      animation: popWin 0.25s ease;
-      max-height: 90dvh;
-      overflow-y: auto;
-    }
-    .modal-box h2 {
-      margin: 0 0 8px;
-      font-size: 1.4rem;
-    }
-    .modal-box p {
-      margin: 0 0 14px;
-      color: var(--text-soft);
-      font-size: 0.96rem;
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 14px 16px;
-      font-family: inherit;
-      font-size: 1.1rem;
-      font-weight: 600;
-      border: 3px solid #CBD5E1;
-      border-radius: 16px;
-      outline: none;
-      text-align: center;
-      margin-bottom: 10px;
-      user-select: text;
-      -webkit-user-select: text;
-    }
-    .input-field:focus {
-      border-color: #38BDF8;
-    }
-
-    .avatar-picker {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 12px 0 16px;
-    }
-    .avatar-choice {
-      width: 56px;
-      height: 56px;
-      font-size: 2rem;
-      border-radius: 50%;
-      border: 3px solid #E2E8F0;
-      background: #F8FAFC;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .avatar-choice.selected {
-      border-color: #FACC15;
-      background: #FEF08A;
-      transform: scale(1.1);
-    }
-
-    /* Statistik Zon Ibu Bapa */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .stat-box {
-      background: #F8FAFC;
-      border: 2px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 12px;
-      text-align: center;
-    }
-    .stat-num {
-      font-size: 1.55rem;
-      font-weight: 700;
-      color: #0284C7;
-    }
-    .stat-label {
-      font-size: 0.82rem;
-      color: var(--text-soft);
-    }
-
-    .pro-card {
-      background: linear-gradient(135deg, #FEF9C3, #FFEDD5);
-      border: 3px solid #FACC15;
-      border-radius: 20px;
-      padding: 16px;
-      text-align: left;
-      margin-top: 12px;
-    }
-    .pro-card ul {
-      margin: 8px 0 12px;
-      padding-left: 20px;
-      font-size: 0.92rem;
-      color: #422006;
-    }
-    .pro-card li { margin-bottom: 4px; }
-
-    .pro-active-badge {
-      background: #DCFCE7;
-      border: 2px solid #4ADE80;
-      color: #166534;
-      border-radius: 16px;
-      padding: 12px;
-      font-weight: 700;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    /* Kanvas Konfeti */
-    #confetti-canvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 100;
-    }
-  </style>
-</head>
-<body>
-  <!-- Latar Belakang Rimba -->
-  <div class="bg-deco" aria-hidden="true">
-    <div class="cloud c1">☁️</div>
-    <div class="cloud c2">☁️</div>
-    <div class="cloud c3">🌿</div>
-    <div class="cloud c4">🌻</div>
-  </div>
-
-  <canvas id="confetti-canvas"></canvas>
-
-  <div class="app-shell">
-    <!-- BAR ATAS -->
-    <header class="top-bar">
-      <div class="profile-pill" id="btn-open-profile" role="button" aria-label="Tukar Profil">
-        <div class="avatar-circle" id="ui-avatar">🦁</div>
-        <div class="profile-meta">
-          <span class="profile-name" id="ui-name">Adik Pintar</span>
-          <span class="star-badge">⭐ <span id="ui-stars">0</span> Bintang</span>
-        </div>
-      </div>
-
-      <div class="top-actions">
-        <button class="icon-btn" id="btn-home" title="Laman Utama" aria-label="Laman Utama">🏠</button>
-        <button class="icon-btn" id="btn-stickers" title="Album Stiker" aria-label="Album Stiker">🏅</button>
-        <button class="icon-btn" id="btn-mute" title="Bunyi" aria-label="Tukar Bunyi">🔊</button>
-      </div>
-    </header>
-
-    <!-- ================= SKRIN 1: LAMAN UTAMA ================= -->
-    <main id="screen-home" class="screen active">
-      <section class="hero-card">
-        <div class="hero-text">
-          <h1>Taman PintarCilik!</h1>
-          <p>Pilih permainan &amp; kumpul bintang hari ini</p>
-        </div>
-        <div class="hero-mascot" id="hero-mascot">🦁</div>
-      </section>
-
-      <section class="module-grid">
-        <button class="module-card mod-bm" onclick="startModule('sukukata')">
-          <div class="module-icon">📖</div>
-          <div class="module-title">Suku Kata</div>
-          <div class="module-sub">Membaca BM</div>
-        </button>
-
-        <button class="module-card mod-math" onclick="startModule('math')">
-          <div class="module-icon">🧮</div>
-          <div class="module-title">Kira-Kira</div>
-          <div class="module-sub">Nombor &amp; Tambah</div>
-        </button>
-
-        <button class="module-card mod-eng" onclick="startModule('english')">
-          <span class="pro-pill" id="badge-eng">5 Percuma</span>
-          <div class="module-icon">🔤</div>
-          <div class="module-title">English Fun</div>
-          <div class="module-sub">Perkataan BI</div>
-        </button>
-
-        <button class="module-card mod-hij" onclick="startModule('hijaiyah')">
-          <span class="pro-pill" id="badge-hij">3 Demo</span>
-          <div class="module-icon">🕌</div>
-          <div class="module-title">Hijaiyah</div>
-          <div class="module-sub">Asas Iqra'</div>
-        </button>
-      </section>
-
-      <div class="sticker-teaser" onclick="openScreen('stickers')">
-        <div class="teaser-left">
-          <div class="teaser-emoji">🎁</div>
-          <div>
-            <div class="teaser-title">Album Stiker Haiwan</div>
-            <div class="teaser-sub" id="ui-sticker-progress">0 / 10 stiker dibuka</div>
-          </div>
-        </div>
-        <span style="font-size: 1.5rem;">➡️</span>
-      </div>
-
-      <button class="parent-footer-btn" onclick="openParentalGate()">
-        🔒 Zon Ibu Bapa &amp; Akses Pro
-      </button>
-    </main>
-
-    <!-- ================= SKRIN 2: PERMAINAN ================= -->
-    <section id="screen-game" class="screen">
-      <div class="game-header">
-        <div class="progress-track">
-          <div class="progress-fill" id="game-progress-bar"></div>
-        </div>
-        <div class="session-count" id="game-counter">1 / 5</div>
-      </div>
-
-      <div class="question-stage">
-        <div class="q-instruction" id="q-instruction">Pilih jawapan yang betul!</div>
-        <div class="q-visual" id="q-visual">⚽</div>
-        <div id="q-extra"></div>
-        <button class="audio-repeat-btn" id="btn-repeat-audio" onclick="repeatCurrentAudio()">
-          🔊 Dengar Semula
-        </button>
-        <div class="feedback-banner" id="feedback-banner"></div>
-      </div>
-
-      <div class="options-grid" id="options-grid"></div>
-    </section>
-
-    <!-- ================= SKRIN 3: ALBUM STIKER ================= -->
-    <section id="screen-stickers" class="screen">
-      <div class="section-card">
-        <h2 class="section-title">🏅 Album Stiker Haiwan</h2>
-        <p class="section-desc">Kumpul setiap <strong>5 bintang</strong> untuk buka stiker haiwan baharu!</p>
-        <div class="sticker-grid" id="sticker-grid"></div>
-        <button class="btn-secondary" onclick="openScreen('home')">⬅️ Kembali ke Taman</button>
-      </div>
-    </section>
-
-    <!-- ================= SKRIN 4: ZON IBU BAPA ================= -->
-    <section id="screen-parent" class="screen">
-      <div class="section-card">
-        <h2 class="section-title">👨‍👩‍👧 Zon Ibu Bapa</h2>
-        <p class="section-desc">Pantau perkembangan pembelajaran anak anda di sini.</p>
-
-        <div class="stats-grid">
-          <div class="stat-box">
-            <div class="stat-num" id="stat-stars">0</div>
-            <div class="stat-label">Jumlah Bintang</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num" id="stat-answered">0</div>
-            <div class="stat-label">Soalan Betul</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num" id="stat-stickers">0/10</div>
-            <div class="stat-label">Stiker Terkumpul</div>
-          </div>
-          <div class="stat-box">
-            <div class="stat-num" id="stat-fav" style="font-size: 1.05rem;">Belum ada</div>
-            <div class="stat-label">Modul Kegemaran</div>
-          </div>
-        </div>
-
-        <!-- Bahagian PintarCilik Pro -->
-        <div id="pro-locked-box" class="pro-card">
-          <h3 style="margin: 0 0 4px; color: #854D0E;">👑 Naik Taraf ke PintarCilik Pro</h3>
-          <ul>
-            <li>Buka semua <strong>12 perkataan English Fun</strong> dengan sebutan audio</li>
-            <li>Buka semua <strong>28 huruf Hijaiyah (Alif – Ya)</strong></li>
-            <li>Buka <strong>3 stiker eksklusif</strong> (Unikorn, Harimau Malaya &amp; Kucing Oyen)</li>
-          </ul>
-
-          <a id="pro-payment-link" href="#" target="_blank" rel="noopener noreferrer" class="btn-pro">
-            💳 Dapatkan Kod Akses Pro
-          </a>
-
-          <p style="font-size: 0.85rem; margin: 8px 0 6px; color: #713F12;">Sudah ada kod akses? Masukkan di bawah:</p>
-          <input type="text" id="pro-code-input" class="input-field" placeholder="Masukkan kod (cth: PINTARPRO)" />
-          <button class="btn-primary" onclick="activateProCode()">Aktifkan PintarCilik Pro</button>
-          <div id="pro-msg" style="margin-top: 8px; font-weight: 700; font-size: 0.9rem; text-align: center;"></div>
-        </div>
-
-        <div id="pro-unlocked-box" class="pro-active-badge" style="display: none;">
-          ✅ PintarCilik Pro Aktif! Semua modul &amp; stiker eksklusif telah dibuka.
-        </div>
-
-        <button class="btn-danger" onclick="resetProgress()">🗑️ Reset Kemajuan Anak</button>
-        <button class="btn-secondary" onclick="openScreen('home')">⬅️ Keluar Zon Ibu Bapa</button>
-      </div>
-    </section>
-  </div>
-
-  <!-- ================= MODAL: PARENTAL GATE ================= -->
-  <div class="modal-backdrop" id="modal-gate">
-    <div class="modal-box">
-      <h2>🔒 Kawalan Ibu Bapa</h2>
-      <p>Sila jawab soalan ini untuk masuk ke Zon Ibu Bapa:</p>
-      <div id="gate-question" style="font-size: 1.8rem; font-weight: 700; color: #0284C7; margin-bottom: 12px;">8 × 7 = ?</div>
-      <input type="number" inputmode="numeric" id="gate-input" class="input-field" placeholder="Jawapan anda" />
-      <div id="gate-error" style="color: #DC2626; font-weight: 600; font-size: 0.9rem; min-height: 22px;"></div>
-      <button class="btn-primary" onclick="verifyParentalGate()">Masuk</button>
-      <button class="btn-secondary" onclick="closeModal('modal-gate')">Batal</button>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: PROFIL ANAK ================= -->
-  <div class="modal-backdrop" id="modal-profile">
-    <div class="modal-box">
-      <h2>🐾 Profil Adik</h2>
-      <p>Pilih haiwan comel &amp; nama panggilan:</p>
-      <div class="avatar-picker" id="avatar-picker"></div>
-      <input type="text" id="profile-name-input" class="input-field" maxlength="16" placeholder="Nama panggilan" />
-      <button class="btn-primary" onclick="saveProfile()">Simpan Profil</button>
-      <button class="btn-secondary" onclick="closeModal('modal-profile')">Tutup</button>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: SAMBUTAN TAMAT SESI ===========
-   <div class="modal-backdrop" id="modal-celebrate">
-    <div class="modal-box">
-      <div style="font-size: 4.2rem; margin-bottom: 6px;">🏆🎉</div>
-      <h2 id="cel-title">Syabas, Hebat!</h2>
-      <p id="cel-desc">Adik berjaya habiskan 5 soalan dan dapat 5 bintang baharu!</p>
-      <div id="cel-new-sticker" style="display: none; background: #FEF9C3; border: 2px solid #FACC15; border-radius: 16px; padding: 10px; margin-bottom: 12px; font-weight: 700; color: #854D0E;"></div>
-      <button class="btn-primary" onclick="replayCurrentModule()">🔄 Main Lagi</button>
-      <button class="btn-secondary" onclick="closeCelebrateToHome()">🏠 Kembali ke Taman</button>
-    </div>
-  </div>
-
-  <!-- ================= MODAL: HAD PERCUMA / INFO PRO ================= -->
-  <div class="modal-backdrop" id="modal-pro-prompt">
-    <div class="modal-box">
-      <div style="font-size: 3.6rem; margin-bottom: 6px;">👑</div>
-      <h2>Hebatnya Adik!</h2>
-      <p id="pro-prompt-text">Semua soalan percuma bagi modul ini telah selesai. Minta ibu atau ayah buka PintarCilik Pro untuk semua soalan!</p>
-      <button class="btn-primary" onclick="closeModal('modal-pro-prompt'); openParentalGate();">🔒 Buka Zon Ibu Bapa</button>
-      <button class="btn-secondary" onclick="closeModal('modal-pro-prompt'); openScreen('home');">🏠 Kembali ke Taman</button>
-    </div>
-  </div>
-    <script>
-    /* =========================================================================
-       1. KONFIGURASI UTAMA (UBAH PAUTAN BAYARAN & KOD PRO DI SINI)
-       ========================================================================= */
-    const CONFIG = {
-      PRO_CODE: "PINTARPRO",                                  // Kod akses Pro (tidak sensitif huruf besar/kecil)
-      PAYMENT_URL: "https://toyyibpay.com/PINTARCILIK-PRO",   // Tukar ke link ToyyibPay / WhatsApp anda
-      SESSION_LENGTH: 5,                                      // Bilangan soalan setiap pusingan
-      STORAGE_KEY: "pintarcilik_data_v1"
-    };
-
-    /* =========================================================================
-       2. DATA SOALAN 4 MODUL PEMBELAJARAN (LENGKAP)
-       ========================================================================= */
-    const DATA = {
-      // MODUL 1: SUKU KATA BM (12 Soalan KV+KV)
-      sukukata: [
-        { emoji: "⚽", s1: "BO", s2: "LA", word: "Bola", distractors: ["LI", "LU"] },
-        { emoji: "👕", s1: "BA", s2: "JU", word: "Baju", distractors: ["JI", "JA"] },
-        { emoji: "📚", s1: "BU", s2: "KU", word: "Buku", distractors: ["KA", "KI"] },
-        { emoji: "🍞", s1: "RO", s2: "TI", word: "Roti", distractors: ["TA", "TU"] },
-        { emoji: "🎩", s1: "TO", s2: "PI", word: "Topi", distractors: ["PA", "PU"] },
-        { emoji: "👁️", s1: "MA", s2: "TA", word: "Mata", distractors: ["TI", "TU"] },
-        { emoji: "🎲", s1: "DA", s2: "DU", word: "Dadu", distractors: ["DA", "DI"] },
-        { emoji: "🐴", s1: "KU", s2: "DA", word: "Kuda", distractors: ["DI", "DU"] },
-        { emoji: "🥛", s1: "SU", s2: "SU", word: "Susu", distractors: ["SA", "SI"] },
-        { emoji: "🪑", s1: "ME", s2: "JA", word: "Meja", distractors: ["JI", "JU"] },
-        { emoji: "🏺", s1: "PA", s2: "SU", word: "Pasu", distractors: ["SA", "SI"] },
-        { emoji: "🚚", s1: "LO", s2: "RI", word: "Lori", distractors: ["RA", "RU"] }
-      ],
-
-      // MODUL 2: KIRA-KIRA CERIA (12 Soalan Kira & Tambah Visual)
-      math: [
-        { type: "count", emoji: "🍎", count: 3, answer: 3, options: [2, 3, 4], speech: "Ada berapa biji epal?" },
-        { type: "count", emoji: "🦆", count: 5, answer: 5, options: [4, 5, 6], speech: "Ada berapa ekor itik?" },
-        { type: "count", emoji: "⭐", count: 4, answer: 4, options: [3, 4, 5], speech: "Kira berapa bintang ini." },
-        { type: "count", emoji: "🍓", count: 6, answer: 6, options: [5, 6, 7], speech: "Ada berapa buah strawberi?" },
-        { type: "count", emoji: "🐝", count: 7, answer: 7, options: [6, 7, 8], speech: "Ada berapa ekor lebah?" },
-        { type: "count", emoji: "🎈", count: 8, answer: 8, options: [7, 8, 9], speech: "Kira berapa belon ini." },
-        { type: "add", emoji: "🍌", a: 2, b: 1, answer: 3, options: [2, 3, 4], speech: "Dua tambah satu sama dengan berapa?" },
-        { type: "add", emoji: "🍪", a: 2, b: 2, answer: 4, options: [3, 4, 5], speech: "Dua tambah dua sama dengan berapa?" },
-        { type: "add", emoji: "🚗", a: 3, b: 2, answer: 5, options: [4, 5, 6], speech: "Tiga tambah dua sama dengan berapa?" },
-        { type: "add", emoji: "🐟", a: 4, b: 2, answer: 6, options: [5, 6, 7], speech: "Empat tambah dua sama dengan berapa?" },
-        { type: "add", emoji: "🦋", a: 3, b: 4, answer: 7, options: [6, 7, 8], speech: "Tiga tambah empat sama dengan berapa?" },
-        { type: "add", emoji: "🧁", a: 5, b: 3, answer: 8, options: [7, 8, 9], speech: "Lima tambah tiga sama dengan berapa?" }
-      ],
-
-      // MODUL 3: ENGLISH FUN (5 Pertama Percuma, Semua 12 dalam Pro)
-      english: [
-        { emoji: "🐱", word: "Cat", options: ["Cat", "Dog", "Cow"] },
-        { emoji: "🍎", word: "Apple", options: ["Apple", "Ball", "Cup"] },
-        { emoji: "☀️", word: "Sun", options: ["Moon", "Sun", "Rain"] },
-        { emoji: "🐟", word: "Fish", options: ["Bird", "Fish", "Frog"] },
-        { emoji: "🚗", word: "Car", options: ["Bus", "Car", "Boat"] },
-        // Soalan 6–12 (Pro)
-        { emoji: "🐦", word: "Bird", options: ["Bird", "Bee", "Bear"] },
-        { emoji: "⭐", word: "Star", options: ["Tree", "Star", "Book"] },
-        { emoji: "🌳", word: "Tree", options: ["Leaf", "Tree", "Grass"] },
-        { emoji: "📖", word: "Book", options: ["Pen", "Bag", "Book"] },
-        { emoji: "🥛", word: "Milk", options: ["Milk", "Cake", "Egg"] },
-        { emoji: "🦆", word: "Duck", options: ["Duck", "Goat", "Lion"] },
-        { emoji: "🎂", word: "Cake", options: ["Cake", "Bread", "Rice"] }
-      ],
-
-      // MODUL 4: KENAL HIJAIYAH (3 Pertama Demo Percuma, Semua 28 dalam Pro)
-      hijaiyah: [
-        { char: "ا", name: "Alif", distractors: ["Ba", "Ta"] },
-        { char: "ب", name: "Ba", distractors: ["Alif", "Ta"] },
-        { char: "ت", name: "Ta", distractors: ["Ba", "Tha"] },
-        // Huruf 4–28 (Pro)
-        { char: "ث", name: "Tha", distractors: ["Ta", "Jim"] },
-        { char: "ج", name: "Jim", distractors: ["Ha", "Kho"] },
-        { char: "ح", name: "Ha", distractors: ["Jim", "Kho"] },
-        { char: "خ", name: "Kho", distractors: ["Ha", "Dal"] },
-        { char: "د", name: "Dal", distractors: ["Dzal", "Ra"] },
-        { char: "ذ", name: "Dzal", distractors: ["Dal", "Zai"] },
-        { char: "ر", name: "Ra", distractors: ["Zai", "Sin"] },
-        { char: "ز", name: "Zai", distractors: ["Ra", "Syin"] },
-        { char: "س", name: "Sin", distractors: ["Syin", "Sod"] },
-        { char: "ش", name: "Syin", distractors: ["Sin", "Dod"] },
-        { char: "ص", name: "Sod", distractors: ["Dod", "Tho"] },
-        { char: "ض", name: "Dod", distractors: ["Sod", "Zho"] },
-        { char: "ط", name: "Tho", distractors: ["Zho", "Ain"] },
-        { char: "ظ", name: "Zho", distractors: ["Tho", "Ghain"] },
-        { char: "ع", name: "Ain", distractors: ["Ghain", "Fa"] },
-        { char: "غ", name: "Ghain", distractors: ["Ain", "Qaf"] },
-        { char: "ف", name: "Fa", distractors: ["Qaf", "Kaf"] },
-        { char: "ق", name: "Qaf", distractors: ["Fa", "Lam"] },
-        { char: "ك", name: "Kaf", distractors: ["Lam", "Mim"] },
-        { char: "ل", name: "Lam", distractors: ["Kaf", "Nun"] },
-        { char: "م", name: "Mim", distractors: ["Nun", "Wau"] },
-        { char: "ن", name: "Nun", distractors: ["Mim", "Ba"] },
-        { char: "و", name: "Wau", distractors: ["Ya", "Ra"] },
-        { char: "ه", name: "Ha'", distractors: ["Wau", "Mim"] },
-        { char: "ي", name: "Ya", distractors: ["Ba", "Ta"] }
-      ]
-    };
-
-    const STICKERS = [
-      { id: "lion", emoji: "🦁", name: "Singa Berani", reqStars: 5, proOnly: false },
-      { id: "elephant", emoji: "🐘", name: "Gajah Comel", reqStars: 10, proOnly: false },
-      { id: "panda", emoji: "🐼", name: "Panda Buluh", reqStars: 15, proOnly: false },
-      { id: "fox", emoji: "🦊", name: "Rubah Cerdik", reqStars: 20, proOnly: false },
-      { id: "butterfly", emoji: "🦋", name: "Rama-Rama", reqStars: 25, proOnly: false },
-      { id: "dolphin", emoji: "🐬", name: "Dolfin Ceria", reqStars: 30, proOnly: false },
-      { id: "dino", emoji: "🦖", name: "Dino Rimba", reqStars: 35, proOnly: false },
-      { id: "unicorn", emoji: "🦄", name: "Unikorn Ajaib", reqStars: 0, proOnly: true },
-      { id: "tiger", emoji: "🐯", name: "Harimau Malaya", reqStars: 0, proOnly: true },
-      { id: "oyen", emoji: "🐱", name: "Kucing Oyen", reqStars: 0, proOnly: true }
-    ];
-
-    const AVATARS = ["🦁", "🐱", "🐼", "🐰", "🦊", "🦖", "🦄", "🐯"];
-    const PRAISE_WORDS = ["Hebat! 🌟", "Pandai! 👏", "Syabas! 🎉", "Bijak! 💫", "Terbaik! 🥳"];
-
-    /* =========================================================================
-       3. STATE & PENYIMPANAN (localStorage)
-       ========================================================================= */
-    const DEFAULT_STATE = {
-      name: "Adik Pintar",
-      avatar: "🦁",
-      stars: 0,
-      totalCorrect: 0,
-      muted: false,
-      isPro: false,
-      plays: { sukukata: 0, math: 0, english: 0, hijaiyah: 0 }
-    };
-
-    let state = loadState();
-    let currentModule = null;
-    let sessionQueue = [];
-    let sessionIndex = 0;
-    let sessionStarsStart = 0;
-    let isLockedAnswer = false;
-    let currentSpeech = { text: "", lang: "ms-MY" };
-    let gateAnswer = 0;
-    let tempAvatar = state.avatar;
-
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
-        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
-        const parsed = JSON.parse(raw);
-        return {
-          ...DEFAULT_STATE,
-          ...parsed,
-          plays: { ...DEFAULT_STATE.plays, ...(parsed.plays || {}) }
-        };
-      } catch (e) {
-        return JSON.parse(JSON.stringify(DEFAULT_STATE));
-      }
-    }
-
-    function saveState() {
-      try {
-        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(state));
-      } catch (e) {}
-    }
-
-    /* =========================================================================
-       4. AUDIO ENGINE (WEB AUDIO API + SPEECH SYNTHESIS — TIADA FAIL MP3)
-       ========================================================================= */
-    let audioCtx = null;
-
-    function getAudioCtx() {
-      if (!audioCtx) {
-        const Ctx = window.AudioContext || window.webkitAudioContext;
-        if (Ctx) audioCtx = new Ctx();
-      }
-      if (audioCtx && audioCtx.state === "suspended") {
-        audioCtx.resume();
-      }
-      return audioCtx;
-    }
-
-    function playTone(freq, duration, type = "sine", startTimeOffset = 0, volume = 0.18) {
-      if (state.muted) return;
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-      const now = ctx.currentTime + startTimeOffset;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, now);
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.exponentialRampToValueAtTime(volume, now + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + duration + 0.02);
-    }
-
-    function playClick() {
-      playTone(520, 0.08, "triangle", 0, 0.12);
-    }
-
-    function playCorrect() {
-      playTone(523.25, 0.14, "triangle", 0, 0.2);      // C5
-      playTone(659.25, 0.14, "triangle", 0.11, 0.2);   // E5
-      playTone(783.99, 0.22, "triangle", 0.22, 0.22);  // G5
-      playTone(1046.5, 0.30, "sine", 0.33, 0.2);       // C6
-    }
-
-    function playWrong() {
-      if (state.muted) return;
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(280, now);
-      osc.frequency.exponentialRampToValueAtTime(190, now + 0.22);
-      gain.gain.setValueAtTime(0.16, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.26);
-    }
-
-    function playFanfare() {
-      const notes = [523.25, 659.25, 783.99, 659.25, 1046.5];
-      const times = [0, 0.12, 0.24, 0.36, 0.48];
-      notes.forEach((n, i) => playTone(n, i === 4 ? 0.45 : 0.14, "triangle", times[i], 0.22));
-    }
-
-    function speakText(text, lang = "ms-MY") {
-      if (state.muted || !("speechSynthesis" in window)) return;
-      try {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = lang;
-        utter.rate = 0.88;
-        utter.pitch = 1.1;
-
-        const voices = window.speechSynthesis.getVoices();
-        if (voices.length) {
-          let match = voices.find(v => v.lang.toLowerCase().startsWith(lang.toLowerCase()));
-          if (!match && lang === "ms-MY") {
-            match = voices.find(v => v.lang.toLowerCase().startsWith("id"));
-          }
-          if (match) utter.voice = match;
-        }
-        window.speechSynthesis.speak(utter);
-      } catch (e) {}
-    }
-
-    function repeatCurrentAudio() {
-      playClick();
-      if (currentSpeech.text) {
-        speakText(currentSpeech.text, currentSpeech.lang);
-      }
-    }
-
-    /* =========================================================================
-       5. KONFETI VISUAL (CANVAS RINGAN)
-       ========================================================================= */
-    const confettiCanvas = document.getElementById("confetti-canvas");
-    const cCtx = confettiCanvas.getContext("2d");
-    let particles = [];
-    let confettiRunning = false;
-
-    function resizeConfetti() {
-      confettiCanvas.width = window.innerWidth;
-      confettiCanvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeConfetti);
-    resizeConfetti();
-
-    function launchConfetti(count = 45) {
-      const colors = ["#FACC15", "#4ADE80", "#38BDF8", "#FB923C", "#F472B6", "#A78BFA"];
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: window.innerWidth * (0.2 + Math.random() * 0.6),
-          y: window.innerHeight * 0.35,
-          vx: (Math.random() - 0.5) * 11,
-          vy: -Math.random() * 10 - 3,
-          size: Math.random() * 8 + 6,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          rot: Math.random() * 360,
-          vrot: (Math.random() - 0.5) * 12,
-          life: 75 + Math.random() * 35
-        });
-      }
-      if (!confettiRunning) {
-        confettiRunning = true;
-        requestAnimationFrame(tickConfetti);
-      }
-    }
-
-    function tickConfetti() {
-      cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.28;
-        p.rot += p.vrot;
-        p.life--;
-        cCtx.save();
-        cCtx.translate(p.x, p.y);
-        cCtx.rotate((p.rot * Math.PI) / 180);
-        cCtx.fillStyle = p.color;
-        cCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
-        cCtx.restore();
-      });
-      particles = particles.filter(p => p.life > 0);
-      if (particles.length > 0) {
-        requestAnimationFrame(tickConfetti);
-      } else {
-        confettiRunning = false;
-        cCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      }
-    }
-          /* =========================================================================
-       6. PENGURUSAN UI & NAVIGASI
-       ========================================================================= */
-    function shuffle(arr) {
-      const copy = [...arr];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
-
-    function getUnlockedStickerCount() {
-      return STICKERS.filter(s => isStickerUnlocked(s)).length;
-    }
-
-    function isStickerUnlocked(sticker) {
-      if (sticker.proOnly) return state.isPro;
-      return state.stars >= sticker.reqStars;
-    }
-
-    function syncHeaderAndBadges() {
-      document.getElementById("ui-avatar").textContent = state.avatar;
-      document.getElementById("hero-mascot").textContent = state.avatar;
-      document.getElementById("ui-name").textContent = state.name;
-      document.getElementById("ui-stars").textContent = state.stars;
-
-      const muteBtn = document.getElementById("btn-mute");
-      muteBtn.textContent = state.muted ? "🔇" : "🔊";
-      muteBtn.classList.toggle("muted", state.muted);
-
-      const unlockedCount = getUnlockedStickerCount();
-      document.getElementById("ui-sticker-progress").textContent = `${unlockedCount} / ${STICKERS.length} stiker dibuka`;
-
-      document.getElementById("badge-eng").textContent = state.isPro ? "PRO ✓" : "5 Percuma";
-      document.getElementById("badge-hij").textContent = state.isPro ? "PRO ✓" : "3 Demo";
-    }
-
-    function openScreen(name) {
-      playClick();
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-      document.getElementById(`screen-${name}`).classList.add("active");
-      if (name === "stickers") renderStickers();
-      if (name === "parent") renderParentZone();
-      syncHeaderAndBadges();
-    }
-
-    function openModal(id) {
-      document.getElementById(id).classList.add("open");
-    }
-
-    function closeModal(id) {
-      playClick();
-      document.getElementById(id).classList.remove("open");
-    }
-
-    /* =========================================================================
-       7. ENJIN PERMAINAN 4 MODUL
-       ========================================================================= */
-    function startModule(mod) {
-      playClick();
-      currentModule = mod;
-      sessionStarsStart = state.stars;
-      sessionIndex = 0;
-
-      let pool = [];
-      let sessionCount = CONFIG.SESSION_LENGTH;
-
-      if (mod === "sukukata") {
-        pool = shuffle(DATA.sukukata);
-      } else if (mod === "math") {
-        pool = shuffle(DATA.math);
-      } else if (mod === "english") {
-        pool = state.isPro ? shuffle(DATA.english) : shuffle(DATA.english.slice(0, 5));
-      } else if (mod === "hijaiyah") {
-        if (state.isPro) {
-          pool = shuffle(DATA.hijaiyah);
-        } else {
-          pool = shuffle(DATA.hijaiyah.slice(0, 3));
-          sessionCount = 3; // 3 huruf demo untuk pengguna percuma
-        }
-      }
-
-      sessionQueue = pool.slice(0, sessionCount);
-      openScreen("game");
-      renderQuestion();
-    }
-
-    function replayCurrentModule() {
-      closeModal("modal-celebrate");
-      startModule(currentModule);
-    }
-
-    function closeCelebrateToHome() {
-      closeModal("modal-celebrate");
-      openScreen("home");
-    }
-
-    function renderQuestion() {
-      isLockedAnswer = false;
-      const total = sessionQueue.length;
-      const q = sessionQueue[sessionIndex];
-
-      document.getElementById("game-counter").textContent = `${sessionIndex + 1} / ${total}`;
-      document.getElementById("game-progress-bar").style.width = `${(sessionIndex / total) * 100}%`;
-
-      const visualEl = document.getElementById("q-visual");
-      const extraEl = document.getElementById("q-extra");
-      const instEl = document.getElementById("q-instruction");
-      const fbEl = document.getElementById("feedback-banner");
-      const optGrid = document.getElementById("options-grid");
-
-      visualEl.className = "q-visual";
-      extraEl.innerHTML = "";
-      fbEl.textContent = "";
-      fbEl.className = "feedback-banner";
-      optGrid.innerHTML = "";
-
-      let choices = [];
-      let correctVal = "";
-      let isSmallText = false;
-
-      if (currentModule === "sukukata") {
-        instEl.textContent = "Lengkapkan suku kata gambar ini:";
-        visualEl.textContent = q.emoji;
-        extraEl.innerHTML = `
-          <div class="syllable-prompt">
-            <span class="syl-red">${q.s1}</span>
-            <span>+</span>
-            <span class="syl-blank" id="syl-slot">?</span>
-          </div>
-        `;
-        choices = shuffle([q.s2, ...q.distractors]);
-        correctVal = q.s2;
-        currentSpeech = { text: q.word, lang: "ms-MY" };
-        speakText(q.word, "ms-MY");
-
-      } else if (currentModule === "math") {
-        if (q.type === "count") {
-          instEl.textContent = "Kira ada berapa kesemuanya?";
-          visualEl.classList.add("math-group");
-          visualEl.textContent = q.emoji.repeat(q.count);
-        } else {
-          instEl.textContent = "Mari tambah bersama-sama!";
-          visualEl.innerHTML = `
-            <div class="math-equation">
-              <div class="math-box">${q.emoji.repeat(q.a)}</div>
-              <span>+</span>
-              <div class="math-box">${q.emoji.repeat(q.b)}</div>
-              <span>= ?</span>
-            </div>
-          `;
-        }
-        choices = shuffle(q.options.map(String));
-        correctVal = String(q.answer);
-        currentSpeech = { text: q.speech, lang: "ms-MY" };
-        speakText(q.speech, "ms-MY");
-
-      } else if (currentModule === "english") {
-        instEl.textContent = "Pilih perkataan Inggeris yang betul:";
-        visualEl.textContent = q.emoji;
-        choices = shuffle(q.options);
-        correctVal = q.word;
-        isSmallText = true;
-        currentSpeech = { text: q.word, lang: "en-US" };
-        speakText(q.word, "en-US");
-
-      } else if (currentModule === "hijaiyah") {
-        instEl.textContent = "Apakah nama huruf Hijaiyah ini?";
-        visualEl.classList.add("hijaiyah-char");
-        visualEl.textContent = q.char;
-        choices = shuffle([q.name, ...q.distractors]);
-        correctVal = q.name;
-        isSmallText = true;
-        currentSpeech = { text: `Huruf ${q.name}`, lang: "ms-MY" };
-      }
-
-      choices.forEach(choice => {
-        const btn = document.createElement("button");
-        btn.className = "opt-btn" + (isSmallText ? " opt-text-sm" : "");
-        btn.textContent = choice;
-        btn.onclick = () => handleAnswer(btn, choice, correctVal, q);
-        optGrid.appendChild(btn);
-      });
-    }
-
-    function handleAnswer(btn, chosen, correctVal, q) {
-      if (isLockedAnswer) return;
-      const fbEl = document.getElementById("feedback-banner");
-
-      if (chosen === correctVal) {
-        isLockedAnswer = true;
-        btn.classList.add("correct");
-        playCorrect();
-        launchConfetti(32);
-
-        // Kemaskini ganjaran & statistik
-        state.stars += 1;
-        state.totalCorrect += 1;
-        state.plays[currentModule] = (state.plays[currentModule] || 0) + 1;
-        saveState();
-        syncHeaderAndBadges();
-
-        // Paparan khas gabung suku kata warna merah + biru
-        if (currentModule === "sukukata") {
-          document.getElementById("q-extra").innerHTML = `
-            <div class="syllable-prompt">
-              <span class="syl-red">${q.s1}</span><span class="syl-blue">${q.s2}</span>
-            </div>
-          `;
-          speakText(q.word, "ms-MY");
-        } else if (currentModule === "english") {
-          speakText(q.word, "en-US");
-        } else if (currentModule === "hijaiyah") {
-          speakText(q.name, "ms-MY");
-        } else if (currentModule === "math") {
-          speakText(String(q.answer), "ms-MY");
-        }
-
-        const praise = PRAISE_WORDS[Math.floor(Math.random() * PRAISE_WORDS.length)];
-        fbEl.textContent = `${praise} +1 ⭐`;
-        fbEl.className = "feedback-banner ok";
-
-        document.getElementById("game-progress-bar").style.width = `${((sessionIndex + 1) / sessionQueue.length) * 100}%`;
-
-        setTimeout(() => {
-          sessionIndex++;
-          if (sessionIndex < sessionQueue.length) {
-            renderQuestion();
-          } else {
-            finishSession();
-          }
-        }, 1250);
-
-      } else {
-        // Jawapan salah: tiada penalti, hanya gegar lembut & galakan
-        playWrong();
-        btn.classList.remove("wrong");
-        void btn.offsetWidth; // restart animasi
-        btn.classList.add("wrong");
-        fbEl.textContent = "Cuba lagi ya! 😊";
-        fbEl.className = "feedback-banner try";
-      }
-    }
-
-    function finishSession() {
-      playFanfare();
-      launchConfetti(70);
-
-      // Semak jika pengguna percuma tamat demo English/Hijaiyah
-      if (!state.isPro && (currentModule === "english" || currentModule === "hijaiyah")) {
-        const msg = currentModule === "english"
-          ? "Adik sudah tamatkan 5 perkataan percuma English Fun! Minta ibu atau ayah aktifkan PintarCilik Pro untuk semua 12 perkataan."
-          : "Adik sudah cuba 3 huruf demo Hijaiyah! Minta ibu atau ayah aktifkan PintarCilik Pro untuk belajar semua 28 huruf Alif hingga Ya.";
-        document.getElementById("pro-prompt-text").textContent = msg;
-        openModal("modal-pro-prompt");
-        return;
-      }
-
-      const gained = state.stars - sessionStarsStart;
-      document.getElementById("cel-title").textContent = `Syabas, ${state.name}!`;
-      document.getElementById("cel-desc").textContent = `Adik berjaya kumpul +${gained} bintang baharu!`;
-
-      // Semak jika ada stiker baharu dibuka dalam sesi ini
-      const newSticker = STICKERS.find(s => !s.proOnly && s.reqStars > sessionStarsStart && s.reqStars <= state.stars);
-      const stBox = document.getElementById("cel-new-sticker");
-      if (newSticker) {
-        stBox.style.display = "block";
-        stBox.textContent = `🎁 Stiker Baharu Dibuka: ${newSticker.emoji} ${newSticker.name}!`;
-      } else {
-        stBox.style.display = "none";
-      }
-
-      openModal("modal-celebrate");
-    }
-
-    /* =========================================================================
-       8. ALBUM STIKER & PROFIL
-       ========================================================================= */
-    function renderStickers() {
-      const grid = document.getElementById("sticker-grid");
-      grid.innerHTML = "";
-      STICKERS.forEach(s => {
-        const unlocked = isStickerUnlocked(s);
-        const div = document.createElement("div");
-        div.className = `sticker-item ${unlocked ? "unlocked" : "locked"}`;
-        const reqText = unlocked
-          ? "✅ Sudah Dibuka"
-          : (s.proOnly ? "👑 Eksklusif Pro" : `🔒 Perlukan ${s.reqStars} ⭐`);
-        div.innerHTML = `
-          <div class="st-emoji">${s.emoji}</div>
-          <div class="st-name">${s.name}</div>
-          <div class="st-req">${reqText}</div>
-        `;
-        grid.appendChild(div);
-      });
-    }
-
-    function openProfileModal() {
-      playClick();
-      tempAvatar = state.avatar;
-      document.getElementById("profile-name-input").value = state.name;
-      const picker = document.getElementById("avatar-picker");
-      picker.innerHTML = "";
-      AVATARS.forEach(av => {
-        const btn = document.createElement("button");
-        btn.className = "avatar-choice" + (av === tempAvatar ? " selected" : "");
-        btn.textContent = av;
-        btn.onclick = () => {
-          playClick();
-          tempAvatar = av;
-          picker.querySelectorAll(".avatar-choice").forEach(b => b.classList.remove("selected"));
-          btn.classList.add("selected");
-        };
-        picker.appendChild(btn);
-      });
-      openModal("modal-profile");
-    }
-
-    function saveProfile() {
-      playClick();
-      const rawName = document.getElementById("profile-name-input").value.trim();
-      state.name = rawName || "Adik Pintar";
-      state.avatar = tempAvatar;
-      saveState();
-      syncHeaderAndBadges();
-      closeModal("modal-profile");
-    }
-
-    /* =========================================================================
-       9. PARENTAL GATE, ZON IBU BAPA & SISTEM PRO
-       ========================================================================= */
-    function openParentalGate() {
-      playClick();
-      const questions = [
-        { q: "8 × 7 = ?", a: 56 },
-        { q: "9 × 6 = ?", a: 54 },
-        { q: "14 + 9 = ?", a: 23 },
-        { q: "25 - 8 = ?", a: 17 },
-        { q: "7 × 6 = ?", a: 42 },
-        { q: "18 + 15 = ?", a: 33 }
-      ];
-      const pick = questions[Math.floor(Math.random() * questions.length)];
-      gateAnswer = pick.a;
-      document.getElementById("gate-question").textContent = pick.q;
-      document.getElementById("gate-input").value = "";
-      document.getElementById("gate-error").textContent = "";
-      openModal("modal-gate");
-    }
-
-    function verifyParentalGate() {
-      const val = parseInt(document.getElementById("gate-input").value, 10);
-      if (val === gateAnswer) {
-        closeModal("modal-gate");
-        openScreen("parent");
-      } else {
-        playWrong();
-        document.getElementById("gate-error").textContent = "Jawapan belum tepat. Sila cuba lagi.";
-      }
-    }
-
-    function renderParentZone() {
-      document.getElementById("stat-stars").textContent = state.stars;
-      document.getElementById("stat-answered").textContent = state.totalCorrect;
-      document.getElementById("stat-stickers").textContent = `${getUnlockedStickerCount()}/${STICKERS.length}`;
-
-      const modLabels = { sukukata: "Suku Kata", math: "Kira-Kira", english: "English Fun", hijaiyah: "Hijaiyah" };
-      let fav = "Belum ada";
-      let maxPlay = 0;
-      Object.keys(state.plays).forEach(k => {
-        if (state.plays[k] > maxPlay) {
-          maxPlay = state.plays[k];
-          fav = modLabels[k];
-        }
-      });
-      document.getElementById("stat-fav").textContent = fav;
-
-      document.getElementById("pro-payment-link").href = CONFIG.PAYMENT_URL;
-      document.getElementById("pro-locked-box").style.display = state.isPro ? "none" : "block";
-      document.getElementById("pro-unlocked-box").style.display = state.isPro ? "block" : "none";
-      document.getElementById("pro-msg").textContent = "";
-      document.getElementById("pro-code-input").value = "";
-    }
-
-    function activateProCode() {
-      const code = document.getElementById("pro-code-input").value.trim().toUpperCase();
-      const msgEl = document.getElementById("pro-msg");
-
-      if (code === CONFIG.PRO_CODE.toUpperCase()) {
-        state.isPro = true;
-        saveState();
-        playFanfare();
-        launchConfetti(80);
-        syncHeaderAndBadges();
-        renderParentZone();
-      } else {
-        playWrong();
-        msgEl.style.color = "#DC2626";
-        msgEl.textContent = "Kod akses tidak sah. Sila semak semula.";
-      }
-    }
-
-    function resetProgress() {
-      if (confirm("Adakah anda pasti mahu padam semua bintang dan kemajuan anak? (Status Pro akan dikekalkan)")) {
-        const keepPro = state.isPro;
-        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
-        state.isPro = keepPro;
-        saveState();
-        syncHeaderAndBadges();
-        renderParentZone();
-      }
-    }
-
-    /* =========================================================================
-       10. INISIALISASI APLIKASI
-       ========================================================================= */
-    document.getElementById("btn-home").onclick = () => openScreen("home");
-    document.getElementById("btn-stickers").onclick = () => openScreen("stickers");
-    document.getElementById("btn-open-profile").onclick = openProfileModal;
-    document.getElementById("btn-mute").onclick = () => {
-      state.muted = !state.muted;
-      if (state.muted && "speechSynthesis" in window) window.speechSynthesis.cancel();
-      saveState();
-      syncHeaderAndBadges();
-      if (!state.muted) playClick();
-    };
-
-    // Muat suara speechSynthesis lebih awal (penting untuk Android Chrome)
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-    }
-
-    syncHeaderAndBadges();
-  </script>
-</body>
-</html>
+:root {
+  --bg-deep: #0B132B;
+  --bg-surface: #151E38;
+  --bg-card: #1C2541;
+  --bg-card-alt: #243052;
+  --emerald: #2EC4B6;
+  --emerald-glow: rgba(46, 196, 182, 0.25);
+  --gold: #F4D35E;
+  --gold-glow: rgba(244, 211, 94, 0.2);
+  --danger: #EF476F;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border: rgba(255, 255, 255, 0.08);
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: calc(88px + var(--safe-bottom));
+  background: radial-gradient(circle at top right, rgba(46, 196, 182, 0.08), transparent 45%),
+              var(--bg-deep);
+}
+
+/* Header */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(11, 19, 43, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.brand-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.streak-badge {
+  background: rgba(244, 211, 94, 0.12);
+  color: var(--gold);
+  border: 1px solid rgba(244, 211, 94, 0.25);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.lang-toggle {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lang-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Main Content & Tabs */
+.main-content {
+  padding: 18px 20px;
+}
+
+.tab-section {
+  display: none;
+  animation: fadeIn 0.28s ease;
+}
+
+.tab-section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.greeting-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.greeting-sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.section-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 22px 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Cards & Buttons */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: var(--emerald);
+  color: #06211E;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #F4D35E, #E5B935);
+  color: #1F1600;
+}
+
+.btn-sos {
+  background: linear-gradient(135deg, #EF476F, #D62851);
+  color: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(239, 71, 111, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  width: auto;
+}
+
+/* Tab 1: Home & SOS */
+.sos-hero {
+  background: linear-gradient(145deg, rgba(239, 71, 111, 0.16), rgba(28, 37, 65, 0.95));
+  border: 1px solid rgba(239, 71, 111, 0.35);
+}
+
+.sos-hero h3 {
+  font-size: 1.15rem;
+  margin-bottom: 6px;
+}
+
+.sos-hero p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.quick-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+.quick-card:active {
+  background: var(--bg-card-alt);
+}
+
+.quick-icon {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.quick-card h4 {
+  font-size: 0.92rem;
+  margin-bottom: 2px;
+}
+
+.quick-card span {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+/* Tab 2: Sessions & 7-Day Program */
+.session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.session-item:active {
+  background: var(--bg-card-alt);
+}
+
+.session-meta h4 {
+  font-size: 0.96rem;
+  margin-bottom: 3px;
+}
+
+.session-meta p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pill-free {
+  background: rgba(46, 196, 182, 0.15);
+  color: var(--emerald);
+}
+
+.pill-pro {
+  background: rgba(244, 211, 94, 0.16);
+  color: var(--gold);
+  border: 1px solid rgba(244, 211, 94, 0.3);
+}
+
+.locked {
+  opacity: 0.75;
+}
+
+/* Tab 3: Sound Mixer */
+.timer-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.timer-pills {
+  display: flex;
+  gap: 6px;
+}
+
+.timer-btn {
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.timer-btn.active {
+  background: var(--emerald);
+  color: #06211E;
+  border-color: var(--emerald);
+}
+
+.timer-countdown {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.sound-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s ease;
+}
+
+.sound-card.playing {
+  border-color: var(--emerald);
+  box-shadow: 0 0 18px var(--emerald-glow);
+}
+
+.sound-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sound-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.toggle-btn {
+  background: var(--bg-surface);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sound-card.playing .toggle-btn {
+  background: var(--emerald);
+  color: #06211E;
+  border-color: var(--emerald);
+}
+
+.volume-slider {
+  width: 100%;
+  accent-color: var(--emerald);
+  height: 5px;
+  cursor: pointer;
+}
+
+/* Tab 4: Journal & Thought Release */
+.mood-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.mood-btn {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 4px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.mood-btn.selected {
+  border-color: var(--emerald);
+  background: rgba(46, 196, 182, 0.15);
+  transform: translateY(-2px);
+}
+
+.input-field,
+.textarea-field {
+  width: 100%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  font-family: inherit;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.input-field:focus,
+.textarea-field:focus {
+  border-color: var(--emerald);
+}
+
+.textarea-field {
+  min-height: 90px;
+  resize: vertical;
+  transition: opacity 0.9s ease, transform 0.9s ease, filter 0.9s ease;
+}
+
+.textarea-field.releasing {
+  opacity: 0;
+  transform: translateY(-24px) scale(0.94);
+  filter: blur(8px);
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.history-emoji {
+  font-size: 1.3rem;
+}
+
+.history-body p {
+  font-size: 0.86rem;
+}
+
+.history-date {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* Tab 5: Pro Subscription */
+.pro-card {
+  background: linear-gradient(155deg, #1C2541 0%, #142B3A 100%);
+  border: 1px solid rgba(244, 211, 94, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.pro-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: #1F1600;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 10px 0 16px;
+}
+
+.price-amount {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.price-period {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.benefit-list {
+  list-style: none;
+  margin-bottom: 18px;
+}
+
+.benefit-list li {
+  font-size: 0.88rem;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.benefit-list li:last-child {
+  border-bottom: none;
+}
+
+.pro-status-box {
+  background: rgba(46, 196, 182, 0.12);
+  border: 1px solid var(--emerald);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.pro-status-box h4 {
+  color: var(--emerald);
+  margin-bottom: 4px;
+}
+
+.code-row {
+  display: flex;
+  gap: 8px;
+}
+
+.code-row .input-field {
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+
+/* Modal Overlay (SOS Breathing & Guided Player) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 12, 28, 0.94);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 20px calc(28px + var(--safe-bottom));
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.modal-overlay.open {
+  display: flex;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.modal-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1;
+  padding: 20px 0;
+}
+
+/* Breathing Circle */
+.breath-stage {
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.breath-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--emerald), #187770);
+  box-shadow: 0 0 35px var(--emerald-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #06211E;
+  transition: transform 4s ease-in-out, box-shadow 4s ease-in-out;
+}
+
+.breath-circle.expand {
+  transform: scale(1.85);
+  box-shadow: 0 0 60px rgba(46, 196, 182, 0.55);
+}
+
+.breath-circle.hold {
+  transform: scale(1.85);
+  box-shadow: 0 0 45px rgba(244, 211, 94, 0.45);
+}
+
+.breath-circle.shrink {
+  transform: scale(1);
+  box-shadow: 0 0 25px var(--emerald-glow);
+}
+
+.breath-instruction {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.mode-switch {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* Guided Script Display */
+.guided-timer {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--emerald);
+  margin-bottom: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.guided-script {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 340px;
+  min-height: 100px;
+  color: var(--text-main);
+  transition: opacity 0.5s ease;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: rgba(16, 24, 48, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 6px calc(10px + var(--safe-bottom));
+  z-index: 50;
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+}
+
+.nav-item.active {
+  color: var(--emerald);
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 92px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1E293B;
+  color: var(--text-main);
+  border: 1px solid var(--emerald);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 120;
+  white-space: nowrap;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
